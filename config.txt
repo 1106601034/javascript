@@ -1,4 +1,7 @@
 npm init
+npx create-react-app@latest reactapp --template typescript
+npx create-next-app@latest nextapp
+
 npm install //install all packages from npm repository
 npm install //or install packages from package.json and package-lock.js
 npm install express@latest
