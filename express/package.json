@@ -13,5 +13,6 @@
   },
   "devDependencies": {
     "karma": "^6.4.4"
-  }
+  },
+  "type": "module"
 }
