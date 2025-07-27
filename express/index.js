@@ -11,8 +11,6 @@
 //     console.log('listening on ' + port);
 // });
 
-import { add, getFoo } from  './archieve.js';
+import { Toolkits } from  './Toolkits.js';
 
-console.log(add(1,2));
-
-console.log(getFoo());
+Toolkits.quit('a');
