@@ -4,6 +4,7 @@ npx create-next-app@latest nextapp
 
 npm start --include=dev
 
+npm install react@latest react-dom@latest
 npm install //install all packages from npm repository
 npm install //or install packages from package.json and package-lock.js
 npm install express@latest
