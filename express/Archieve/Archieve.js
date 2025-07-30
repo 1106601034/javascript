@@ -1,6 +1,10 @@
 import express from "express";
 
 export default class Archieve {
+
+// --------------------------
+// Server
+// --------------------------
     static server() {
         // Create a new web application by calling the express function
         let app = express()
@@ -27,7 +31,6 @@ export default class Archieve {
             return false;
         }
 
-
         // Tell our application to serve all the files under the `public_html` directory
         app.use(express.static('public_html'))
 
@@ -40,4 +43,7 @@ export default class Archieve {
             console.log("Type Ctrl+C to shut down the web server")
         })
     }
+// --------------------------
+// 
+// --------------------------
 }
