@@ -1,5 +1,5 @@
 // Require the express web application framework (https://expressjs.com)
-let express = require('express')
+import express from 'express';
 
 // Create a new web application by calling the express function
 let app = express()
@@ -28,7 +28,7 @@ function normalizePort(val) {
 
 
 // Tell our application to serve all the files under the `public_html` directory
-app.use(express.static('public_html'))
+app.use(static('public_html'))
 
 // Tell our application to listen to requests at port 3000 on the localhost
 app.listen(port, function () {
