@@ -1,7 +1,7 @@
 // --------------------------
 // 🧰 Toolkit for Common Tasks
 // --------------------------
-export class Toolkits {
+export default class Toolkits {
   // --------------------------
   // 🧮 Array To List
   // --------------------------
