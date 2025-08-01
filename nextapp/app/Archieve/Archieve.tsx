@@ -1,10 +1,14 @@
-// 
+// --------------------------
+// Stackt Symbol
+// --------------------------
 export function StacktSymbol(params: number) {
   for (let index = 1; index <= params; index++) {
     console.log('#'.repeat(index));
   }
 }
-
+// --------------------------
+// fizzBuzz
+// --------------------------
 export function fizzBuzz(n: number): (string | number)[] {
   const result: (string | number)[] = [];
   for (let i = 1; i <= n; i++) {
@@ -16,4 +20,6 @@ export function fizzBuzz(n: number): (string | number)[] {
   }
   return result;
 }
-
+// --------------------------
+// 
+// --------------------------
