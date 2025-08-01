@@ -2,13 +2,18 @@ npm init
 npx create-react-app@latest reactapp --template typescript
 npx create-next-app@latest nextapp
 
+npm run dev
+npx next dev
 npm start --include=dev
 
+npm install -g typescript
 npm install react@latest react-dom@latest
 npm install //install all packages from npm repository
 npm install //or install packages from package.json and package-lock.js
 npm install express@latest
 npm install --save-dev karma@latest
+
+tsc [your file] --noEmitOnError true
 
 npm audit //summize issues found in the currently installed modules
 npm audit fix --force

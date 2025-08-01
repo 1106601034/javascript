@@ -1,5 +1,6 @@
-import Toolkits from './Archieve/Toolkits.js';
-import Archieve from './Archieve/Archieve.js';
+import { isInRange } from './Archieve/Toolkits.js';
+import { server } from './Archieve/Archieve.js';
 
-Toolkits.quit('a');
-Archieve.server();
+// console.log(isInRange(1,2,3));
+// server();
+
