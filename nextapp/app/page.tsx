@@ -2,11 +2,10 @@ import * as Archieve from "./Archieve/Archieve";
 import * as Toolkits from "./Archieve/Toolkits";
 
 export default function Home() {
-  console.clear();
-  const WriteLine = Archieve.countBs("BasB");
+  let randomGoodiesToYOu: any = Toolkits.HereIsSomeGoodies();
   return (
     <div>
-      <h2>{WriteLine}</h2>
+      <h2>{randomGoodiesToYOu}</h2>
     </div>
   );
 }

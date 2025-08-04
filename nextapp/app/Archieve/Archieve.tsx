@@ -44,3 +44,16 @@ export function countBs(args: string): number {
 // --------------------------
 // 
 // --------------------------
+export function tag(literal: any, ...values: any): string {
+  let result: number = 0;
+  switch (literal[1]) {
+    case " plus ":
+      result = values[0] + values[1];
+      break;
+    case " minus ":
+      result = values[0] - values[1];
+      break;
+  }
+  return `${values[0]}${literal[1]}${values[1]} is ${result}`;
+}
+// --------------------------
