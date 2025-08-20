@@ -2,6 +2,8 @@ npm init
 npx create-react-app@latest reactapp --template typescript
 npx create-next-app@latest nextapp
 
+node index.js
+
 npm run dev
 npx next dev
 npm start --include=dev //will require a build
