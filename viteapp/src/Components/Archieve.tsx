@@ -99,7 +99,7 @@ export class Item {
   }
 }
 
-export function PrintItems(List: any[]): string {
+export function PrintItems(List: string[]): string {
   if (List.length > 5) {
     console.log("Your cart is full!");
   }
