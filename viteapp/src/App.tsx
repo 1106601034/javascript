@@ -1,16 +1,13 @@
-import MyClock from './Components/MyClock';
-import CourseCard from './Components/CourseCard';
-
-import './App.css';
+// import React from 'react';
+import { CourseCard, MyClock } from './Components/Archieves';
+import './App.scss';
 
 function App() {
   console.clear();
   return (
     <div className="App">
       <MyClock />
-      {CourseCard('beginner')}
-      {CourseCard('Intermediate')}
-      {CourseCard('Advance')}
+      {CourseCard()}
     </div >
   )
 }
