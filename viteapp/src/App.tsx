@@ -8,7 +8,7 @@ function App() {
     <div className='container-fluid'>
       <div className='App'>
         <div className='row'>
-          <div className='col-md-12 jumbotron'>
+          <div className='col-md-12'>
             <div className='col-md-5'>
               <MyClock />
             </div>
@@ -16,12 +16,16 @@ function App() {
               {SignInToShowInput()}
             </div>
           </div>
+        </div>
+        <div className='row'>
           <div className='col-md-12'>
-            <FetchPostList />
+            <div className='col-md-8'>
+              <FetchPostList />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
