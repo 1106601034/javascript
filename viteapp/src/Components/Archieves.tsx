@@ -24,12 +24,14 @@ export function SignInToShowInput() {
     return (
         <div className="course-card">
             <h2>{headerText}</h2>
-            <button onClick={toggleEnrollment}>{signInText}</button>
-            <button onClick={toggleReviewInput} disabled={!isSignedIn}>
-                Leave a feedback
-            </button>
+            <div className="btn-group">
+                <button type="button" className="btn btn-primary" onClick={toggleEnrollment}>{signInText}</button>
+                <button type="button" className="btn btn-primary" onClick={toggleReviewInput} disabled={!isSignedIn}>
+                    Leave a feedback
+                </button>
+            </div>
             {showReviewInput && (
-                <input type="text" placeholder="Leave a feedback" aria-label="feedback" />
+                <input type="text" className="form-control" placeholder="Leave a feedback" aria-label="feedback" />
             )}
         </div>
     );
@@ -94,7 +96,7 @@ export function FetchPostList() {
     return (
         <div className="post-list">
             <h2>Post List</h2>
-            <button className="btn btn-primary" onClick={handleFetchPosts} disabled={isLoading}>
+            <button type="button" className="btn btn-primary" onClick={handleFetchPosts} disabled={isLoading}>
                 {buttonLabel}
             </button>
             {error && <p>{error}</p>}
