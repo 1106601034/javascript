@@ -1,7 +1,9 @@
 // import React from 'react';
-import { SignInToShowInput, MyClock, FetchPostList } from './components/Archieves';
-import { Header } from './components/Headers'
-import { Footer } from './components/Footers'
+import MyClock from './components/MyClock';
+import SignInToShowInput from './components/useState';
+import FetchPostList from './components/fetchPostJson';
+import Header from './components/Headers'
+import Footer from './components/Footers'
 import './App.scss';
 
 function App() {
