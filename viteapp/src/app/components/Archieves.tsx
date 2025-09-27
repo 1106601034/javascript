@@ -103,7 +103,13 @@ export function FetchPostList() {
             {!error && hasFetched && !isLoading && posts.length === 0 && <p>No posts to display.</p>}
             <ul className="list-group">
                 {posts.map((post) => (
-                    <li key={post.id} className="list-group-item">{post.title}</li>
+                    <li key={post.id} className="list-group-item">
+                        <div className="d-flex justify-content-start">
+                            <span>{post.id}</span>
+                            .&nbsp;
+                            <span>{post.title}</span>
+                        </div>
+                    </li>
                 ))}
             </ul>
         </div>
