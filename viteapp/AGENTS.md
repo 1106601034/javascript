@@ -15,3 +15,7 @@ Automated testing is not yet configured; when adding coverage, scaffold Vitest w
 ## Commit & Pull Request Guidelines
 Write commit messages in imperative present tense, ideally following `type(scope): summary` (for example, `feat(clock): add seconds hand`). Keep commits focused; bundle lint fixes with the change they support. Pull requests should describe the user-visible impact, outline testing performed (`npm run lint`, future `npm test`), and link related issues. Include screenshots or short clips when altering UI states so reviewers can verify rendering quickly.
 
+## Code Review 2025-09-28
+- `src/app/components/Calculater.tsx:6` calls `setCount` during render using undefined variables `input1` and `input2`; this throws immediately and forces an infinite re-render loop, so the calculator never mounts.
+- `src/app/App.tsx:29` invokes `SignInToShowInput()` like a plain function; that violates the Rules of Hooks and causes its state to attach to `App`, leading to React warnings and broken updates.
+- `src/app/App.tsx:11` runs `console.clear()` on every render, wiping useful logs and introducing a side-effect in the render path.

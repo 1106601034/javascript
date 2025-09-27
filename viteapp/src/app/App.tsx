@@ -1,9 +1,10 @@
 // import React from 'react';
 import MyClock from './components/MyClock';
-import SignInToShowInput from './components/useState';
+import SignInToShowInput from './components/buttonGroup';
 import FetchPostList from './components/fetchPostJson';
 import Header from './components/Headers'
 import Footer from './components/Footers'
+import Calculater from './components/Calculater';
 import './App.scss';
 
 function App() {
@@ -15,6 +16,11 @@ function App() {
           <Header />
         </div>
         <div className='container'>
+          <div className='row'>
+            <div className='col-3'>
+              <Calculater />
+            </div>
+          </div>
           <div className='row'>
             <div className='col-5'>
               <MyClock />
