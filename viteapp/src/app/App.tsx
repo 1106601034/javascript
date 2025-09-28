@@ -1,10 +1,13 @@
 // import React from 'react';
+
 import MyClock from './components/MyClock';
-import SignInToShowInput from './components/buttonGroup';
+// import SignInToShowInput from './components/buttonGroup';
 import FetchPostList from './components/fetchPostJson';
 import Header from './components/Headers'
 import Footer from './components/Footers'
 import Calculater from './components/Calculater';
+import { UseEffectExample2 } from "./components/reactHookExample";
+
 import './App.scss';
 
 function App() {
@@ -26,7 +29,7 @@ function App() {
               <MyClock />
             </div>
             <div className='col-7 text-end'>
-              {SignInToShowInput()}
+              <UseEffectExample2 />
             </div>
           </div>
           <div className='row'>
