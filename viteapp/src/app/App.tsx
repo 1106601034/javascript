@@ -1,10 +1,6 @@
-// import React from 'react';
-
-import MyClock from './components/MyClock';
 import Header from './components/Headers'
 import Footer from './components/Footers'
 import Calculater from './components/Calculater';
-import { UseEffectExample2 } from "./components/reactHookExample";
 
 import './App.scss';
 
@@ -24,10 +20,10 @@ function App() {
           </div>
           <div className='row'>
             <div className='col-5'>
-              <MyClock />
+
             </div>
             <div className='col-7 text-end'>
-              <UseEffectExample2 />
+
             </div>
           </div>
           <div className='row'>
