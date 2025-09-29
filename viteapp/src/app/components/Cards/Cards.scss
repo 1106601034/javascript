@@ -1,0 +1,209 @@
+/* The * selector selects all elements, 
+the *:before selector selects all elements before the content, 
+and the *:after selector selects all elements after the content. */
+*,
+*:before,
+*:after {
+    /* global CSS resez */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(237, 230, 227);
+}
+
+main {
+    flex: 1;
+}
+
+.cards {
+    /* display: flex;
+    justify-content: center;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 10%;
+    grid-gap: 40px;
+}
+
+/* makes a one column layout instead of a two-column layout */
+@media (max-width: 1400px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1000px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    font-family: Arial, sans-serif;
+    width: 400px;
+    height: 250px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.hero-image {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.hero-image.hero-image-1 {
+    background-image: linear-gradient(#6e5bcd, rgba(211, 24, 24, 0.5)),
+        url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1200&q=80");
+}
+
+.hero-image.hero-image-2 {
+    background-image: linear-gradient(#75ebeb, rgba(81, 174, 101, 0.5)),
+        url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80");
+}
+
+.hero-text {
+    padding: 30px 25px 0px;
+}
+
+.hero-text h3 {
+    font-size: 2rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.hero-text p {
+    line-height: 1.5rem;
+    margin-top: 0.5rem;
+    font-weight: bold;
+    text-shadow: #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+}
+
+.card-button {
+    font-size: 12px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+    margin: 1.5rem 1.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 3px;
+    transition: background-color, font-size 0.3s;
+}
+
+.card-button:hover {
+    font-size: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.card.review-card {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.reviewer-info {
+    flex: 1;
+}
+
+.reviewer-info .name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.reviewer-info .name.name-primary {
+    color: #333;
+}
+
+.reviewer-info .name.name-secondary {
+    color: #ffffff;
+}
+
+.reviewer-info .role {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.reviewer-info .role.role-primary {
+    color: #aaaaaa;
+}
+
+.reviewer-info .role.role-secondary {
+    color: #ffffff;
+}
+
+.reviewer-info .company {
+    font-weight: bold;
+}
+
+.reviewer-info .company.company-primary {
+    color: blueviolet;
+}
+
+.reviewer-info .company.company-secondary {
+    color: white;
+}
+
+.stars {
+    align-self: flex-start;
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+.stars.stars_primary {
+    color: #f5a623;
+}
+
+.stars.stars_secondary {
+    color: #ffffff;
+}
+
+.review-body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 25px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.review-body.review-primary {
+    color: #9f9f9f;
+}
+
+.review-body.review-secondary {
+    color: #f1f1f1;
+}
+
+.card.review-card.hero-image-3 {
+    background-image: linear-gradient(rgb(38, 56, 56), #312d3180);
+}
