@@ -7,21 +7,19 @@ import './App.scss';
 function App() {
   console.clear();
   return (
-    <div className='container-fluid'>
-      <div className='App'>
-        <div className='header'>
-          <Header />
-        </div>
-
-        <div className='container'>
-          <Blog />
-        </div>
-
-        <div className='footer'>
-          <Footer />
-        </div >
+    <div className='App'>
+      <div className='header'>
+        <Header />
       </div>
-    </div >
+
+      <div className='container'>
+        <Blog />
+      </div>
+
+      <div className='footer'>
+        <Footer />
+      </div >
+    </div>
   )
 }
 
