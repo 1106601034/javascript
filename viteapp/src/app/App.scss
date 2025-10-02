@@ -31,7 +31,6 @@ body {
 
 .pagination {
     display: flex;
-    padding-left: 0;
     list-style: none;
     border-radius: 0.25rem;
     flex-wrap: wrap;
@@ -43,6 +42,7 @@ body {
     border: 1px solid #dee2e6;
     padding: 0.5rem 0.75rem;
     margin-left: -1px;
+    margin-bottom: 1rem;
 }
 
 a {

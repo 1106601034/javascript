@@ -22,12 +22,17 @@ export default function Blog() {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     return (
         <div>
             <h1 className="text-primary">My Blog</h1>
             <Posts currentPosts={currentPosts} loading={loading} />
-            <Pagination />
+            <Pagination
+                paginate={paginate}
+                postsPerPage={postsPerPage}
+                currentPage={currentPage}
+                totalPosts={posts.length}
+            />
         </div>
     );
 }
