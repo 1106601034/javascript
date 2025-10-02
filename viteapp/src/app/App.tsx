@@ -1,6 +1,6 @@
 import Header from './components/Headers'
 import Footer from './components/Footers'
-import Calculater from './components/Calculater';
+import Blog from './components/Blog/Blog';
 
 import './App.scss';
 
@@ -12,34 +12,16 @@ function App() {
         <div className='header'>
           <Header />
         </div>
+
         <div className='container'>
-          <div className='row'>
-            <div className='col-3'>
-              <Calculater />
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col-5'>
-
-            </div>
-            <div className='col-7 text-end'>
-
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col-8'>
-
-            </div>
-            <div className='col-4'>
-              <></>
-            </div>
-          </div>
+          <Blog />
         </div>
+
         <div className='footer'>
           <Footer />
         </div >
       </div>
-    </div>
+    </div >
   )
 }
 
