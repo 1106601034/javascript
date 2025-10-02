@@ -1,12 +1,6 @@
-// import React from 'react';
-
-import MyClock from './components/MyClock';
-// import SignInToShowInput from './components/buttonGroup';
-import FetchPostList from './components/fetchPostJson';
 import Header from './components/Headers'
 import Footer from './components/Footers'
 import Calculater from './components/Calculater';
-import { UseEffectExample2 } from "./components/reactHookExample";
 
 import './App.scss';
 
@@ -15,7 +9,7 @@ function App() {
   return (
     <div className='container-fluid'>
       <div className='App'>
-        <div className='row'>
+        <div className='header'>
           <Header />
         </div>
         <div className='container'>
@@ -26,22 +20,22 @@ function App() {
           </div>
           <div className='row'>
             <div className='col-5'>
-              <MyClock />
+
             </div>
             <div className='col-7 text-end'>
-              <UseEffectExample2 />
+
             </div>
           </div>
           <div className='row'>
             <div className='col-8'>
-              <FetchPostList />
+
             </div>
             <div className='col-4'>
               <></>
             </div>
           </div>
         </div>
-        <div className='row'>
+        <div className='footer'>
           <Footer />
         </div >
       </div>
