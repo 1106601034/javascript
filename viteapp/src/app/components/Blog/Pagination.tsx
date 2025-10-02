@@ -19,13 +19,10 @@ export default function Pagination({
             <ul className="pagination">
                 {pageNumbers.map((number) => (
                     <li key={number} className="page-item">
-                        <a
-                            onClick={() => paginate(number)}
-                            href="#"
+                        <a onClick={() => paginate(number)} href="#"
                             className={
                                 `page-link ${currentPage === number ? 'active-page' : ''}`
-                            }
-                        >
+                            }>
                             {number}
                         </a>
                     </li>
