@@ -8,7 +8,6 @@ export default function Blog() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 10;
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
@@ -20,14 +19,19 @@ export default function Blog() {
         fetchPosts();
     }, []);
 
+    const postsPerPage = 10;
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
     return (
         <div>
             <h1 className="text-primary">My Blog</h1>
-            <Posts currentPosts={currentPosts} loading={loading} />
+            <Posts
+                currentPosts={currentPosts}
+                loading={loading}
+            />
             <Pagination
                 paginate={paginate}
                 postsPerPage={postsPerPage}
