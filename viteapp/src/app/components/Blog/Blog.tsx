@@ -6,6 +6,8 @@ import axios from "axios";
 export default function Blog() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 10;
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
@@ -17,14 +19,14 @@ export default function Blog() {
         fetchPosts();
     }, []);
 
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
     return (
         <div>
             <h1 className="text-primary">My Blog</h1>
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <Posts />
-            )}
+            <Posts currentPosts={currentPosts} loading={loading} />
             <Pagination />
         </div>
     );
