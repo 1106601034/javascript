@@ -1,24 +1,14 @@
-import Header from './components/Headers'
-import Footer from './components/Footers'
-import Blog from './components/Blog/Blog';
-
-import './App.scss';
+import Header from './components/Notes/Header';
+import Notes from './components/Notes/Notes';
 
 function App() {
   console.clear();
   return (
     <div className='App'>
-      <div className='header'>
-        <Header />
-      </div>
-
       <div className='container'>
-        <Blog />
+        <Header />
+        <Notes />
       </div>
-
-      <div className='footer'>
-        <Footer />
-      </div >
     </div>
   )
 }
