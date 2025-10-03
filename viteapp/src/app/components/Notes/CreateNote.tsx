@@ -1,15 +1,12 @@
 import { LinearProgress } from "@mui/material";
-const CreateNote = (
-    {
-        textHandler,
-        saveHandler,
-        inputText,
-    }: {
-        textHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-        saveHandler: () => void;
-        inputText: string
-    }
-) => {
+
+interface CreateNoteProps {
+    textHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    saveHandler: () => void;
+    inputText: string;
+}
+
+const CreateNote = ({ textHandler, saveHandler, inputText, }: CreateNoteProps) => {
     const charLimit = 100;
     const charLeft = charLimit - inputText.length;
     const charPercent = (inputText.length / charLimit) * 100;

@@ -6,8 +6,14 @@ import './css/Notes.css'
 import { v4 as uuid } from 'uuid'
 import { useEffect, useState } from "react"
 
+interface NoteType {
+    id: string;
+    body?: string;
+    text?: string;
+}
+
 const Notes = () => {
-    const [notes, setNotes] = useState<any[]>([]);
+    const [notes, setNotes] = useState<NoteType[]>([]);
     const [loading, setLoading] = useState(true);
     const [inputText, setInputText] = useState("");
 
@@ -28,6 +34,11 @@ const Notes = () => {
         setInputText("");
     }
 
+    const deleteNote = (id: string) => {
+        const filteredNotes = notes.filter((note) => note.id !== id);
+        setNotes(filteredNotes);
+    }
+
     useEffect(() => {
         //if can't find then return null from localStorage
         const notesString = localStorage.getItem("Notes");
@@ -38,6 +49,12 @@ const Notes = () => {
         setLoading(false);
     }, []);
 
+    useEffect(() => {
+        if (!loading) {
+            localStorage.setItem("Notes", JSON.stringify(notes));
+        }
+    }, [notes, loading]);
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -47,8 +64,14 @@ const Notes = () => {
                 <Header />
             </div>
             <div className="notes">
-                <Note />
-                <Note />
+                {notes.map((note) => (
+                    <Note
+                        key={note.id}
+                        id={note.id}
+                        text={note.text ?? note.body ?? ""}
+                        deleteNote={deleteNote}
+                    />
+                ))}
                 <CreateNote
                     textHandler={textHandler}
                     saveHandler={saveHandler}

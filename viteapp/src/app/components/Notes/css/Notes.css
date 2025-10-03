@@ -1,0 +1,30 @@
+.note {
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.note__body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.note__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.note__delete {
+    cursor: pointer;
+    color: #ff4d4d;
+    transition: color 0.2s;
+}
+
+.note__delete:hover {
+    color: #ff1a1a;
+}
