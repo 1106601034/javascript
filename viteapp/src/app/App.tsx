@@ -1,12 +1,10 @@
-import Header from './components/Notes/Header';
 import Notes from './components/Notes/Notes';
-
+// import "./App.scss"
 function App() {
   console.clear();
   return (
-    <div className='App'>
+    <div className='main'>
       <div className='container'>
-        <Header />
         <Notes />
       </div>
     </div>

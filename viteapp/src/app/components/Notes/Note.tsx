@@ -1,6 +1,9 @@
 const Note = () => {
     return (
-        <div>Note</div>
+        <div className="note">
+            <div className="note__body">Body</div>
+            <div className="note__footer"></div>
+        </div>
     )
 }
 
