@@ -7,7 +7,9 @@ import './Blog.scss';
 export default function Blog() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [postsPerPage, setPostsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
@@ -19,11 +21,12 @@ export default function Blog() {
         fetchPosts();
     }, []);
 
-    const postsPerPage = 10;
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+    const goToNextPage = () => setCurrentPage(prevPage => prevPage + 1);
+    const goToPrevPage = () => setCurrentPage(prevPage => prevPage - 1);
 
     return (
         <div>
@@ -33,10 +36,12 @@ export default function Blog() {
                 loading={loading}
             />
             <Pagination
-                paginate={paginate}
                 postsPerPage={postsPerPage}
                 currentPage={currentPage}
                 totalPosts={posts.length}
+                paginate={paginate}
+                goToNextPage={goToNextPage}
+                goToPrevPage={goToPrevPage}
             />
         </div>
     );
