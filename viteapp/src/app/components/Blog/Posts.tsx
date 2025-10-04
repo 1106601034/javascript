@@ -1,10 +1,15 @@
-interface Post {
+interface IPost {
     id: number;
     title: string;
     // Add other fields if needed
 }
 
-export default function Posts({ currentPosts, loading, }: { currentPosts: Post[]; loading: boolean; }) {
+interface IPosts {
+    currentPosts: IPost[];
+    loading: boolean;
+}
+
+export default function Posts({ currentPosts, loading, }: IPosts) {
 
     if (loading) {
         return <p>Loading...</p>;

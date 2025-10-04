@@ -1,14 +1,11 @@
-export default function Pagination({
-    postsPerPage,
-    currentPage,
-    paginate,
-    totalPosts,
-}: {
+interface IPagination {
     postsPerPage: number;
     currentPage: number;
     paginate: (pageNumber: number) => void;
     totalPosts: number;
-}) {
+}
+
+export default function Pagination({ postsPerPage, currentPage, paginate, totalPosts }: IPagination) {
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
         pageNumbers.push(i);
