@@ -1,8 +1,7 @@
 // import Blog from './components/Blog/Blog';
 // import Notes from './components/Notes/Notes';
 import "./App.scss"
-
-import ToDoList from "./components/ToDoList/ToDoList";
+import HomePage from "./components/ToDoList/HomePage";
 
 // import PaginationExample1 from './components/Pagination/paginationExample1';
 function App() {
@@ -10,7 +9,7 @@ function App() {
   return (
     <div className='main'>
       <div className='container'>
-        <ToDoList />
+        <HomePage />
       </div>
     </div>
   )

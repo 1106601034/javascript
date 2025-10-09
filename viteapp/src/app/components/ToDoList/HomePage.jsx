@@ -17,11 +17,9 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Checkbox,
-  Fab
+  Checkbox
 } from '@mui/material';
 import {
-  Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Assignment as TaskIcon,
@@ -32,52 +30,19 @@ import {
   CheckCircle as CompleteIcon
 } from '@mui/icons-material';
 
-import { useState } from 'react';
-
-type Todo = {
-  id: number;
-  title: string;
-  description: string;
-  priority: string;
-  status: string;
-  dueDate: Date | null;
-};
-
-function HomePage() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const handleAddTodo = () => {
-    setTodos([...todos, {
-      id: Date.now(),
-      title: "test",
-      description: "123",
-      priority: "normal",
-      status: "pending",
-      dueDate: null,
-    }]);
-  }
-
-  return (
+const HomePage = () => {
+   return (
     <>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleAddTodo}
-          disabled={false}
-          sx={{ position: 'fixed', top: 16, right: 16 }}
-        >
-          <AddIcon />
-        </Fab>
-
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
           <Typography variant="h6" component="div">
             📋 任务列表
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            当前共有 {todos.length} 个任务
+            当前共有 {0} 个任务
           </Typography>
         </Box>
-
+        
         <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader aria-label="任务列表">
             <TableHead>
@@ -119,12 +84,12 @@ function HomePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {[].map((todo: Todo) => {
+              {[].map((todo) => {
                 const overdue = false;
                 return (
                   <TableRow
                     key={todo.id}
-                    sx={{
+                    sx={{ 
                       '&:last-child td, &:last-child th': { border: 0 },
                       '&:hover': { bgcolor: 'action.hover' },
                       opacity: todo.status === '已完成' ? 0.7 : 1,
@@ -134,16 +99,16 @@ function HomePage() {
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={todo.status === '已完成'}
-                        onChange={() => { }}
+                        onChange={() => {}}
                         color="primary"
                       />
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      <Typography
-                        variant="body2"
+                      <Typography 
+                        variant="body2" 
                         fontWeight="medium"
-                        sx={{
-                          textDecoration: todo.status === '已完成' ? 'line-through' : 'none'
+                        sx={{ 
+                          textDecoration: todo.status === '已完成' ? 'line-through' : 'none' 
                         }}
                       >
                         {todo.title}
@@ -153,9 +118,9 @@ function HomePage() {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography
-                        variant="body2"
-                        sx={{
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
                           maxWidth: 200,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -166,22 +131,22 @@ function HomePage() {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Chip
-                        label={todo.priority}
+                      <Chip 
+                        label={todo.priority} 
                         color={"black"}
                         size="small"
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Chip
-                        label={todo.status}
+                      <Chip 
+                        label={todo.status} 
                         color={"black"}
                         size="small"
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Typography
-                        variant="body2"
+                      <Typography 
+                        variant="body2" 
                         color={overdue ? 'error.main' : 'text.primary'}
                         fontWeight={overdue ? 'bold' : 'normal'}
                       >
@@ -197,7 +162,7 @@ function HomePage() {
                       <Tooltip title="编辑任务">
                         <IconButton
                           size="small"
-                          onClick={() => { }}
+                          onClick={() => {}}
                           color="primary"
                         >
                           <EditIcon fontSize="small" />
@@ -206,7 +171,7 @@ function HomePage() {
                       <Tooltip title="删除任务">
                         <IconButton
                           size="small"
-                          onClick={() => { }}
+                          onClick={() => {}}
                           color="error"
                         >
                           <DeleteIcon fontSize="small" />
@@ -224,7 +189,7 @@ function HomePage() {
       {/* 删除确认对话框 */}
       <Dialog
         open={false}
-        onClose={() => { }}
+        onClose={()=>{}}
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-description"
       >
@@ -233,16 +198,16 @@ function HomePage() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
-            您确定要删除任务 "{ }" 吗？此操作无法撤销。
+            您确定要删除任务 "{}" 吗？此操作无法撤销。
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { }}>
+          <Button onClick={()=>{}}>
             取消
           </Button>
-          <Button
-            onClick={() => { }}
-            color="error"
+          <Button 
+            onClick={()=>{}} 
+            color="error" 
             variant="contained"
             autoFocus
           >
