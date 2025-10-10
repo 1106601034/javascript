@@ -1,16 +1,13 @@
-// import Blog from './components/Blog/Blog';
-// import Notes from './components/Notes/Notes';
-import "./App.scss"
-import HomePage from "./components/ToDoList/HomePage";
+import NavBar from "./components/nav-bar/navBar";
+import Footer from "./components/footer/Footers";
 
-// import PaginationExample1 from './components/Pagination/paginationExample1';
+import "./App.scss"
+
 function App() {
   console.clear();
   return (
     <div className='main'>
-      <div className='container'>
-        <HomePage />
-      </div>
+      <NavBar />
     </div>
   )
 }
