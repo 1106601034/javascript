@@ -1,4 +1,4 @@
-const NavBar = () => {
+const NavBarExample = () => {
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -39,4 +39,4 @@ const NavBar = () => {
     )
 }
 
-export default NavBar
+export default NavBarExample
