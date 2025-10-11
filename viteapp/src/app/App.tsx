@@ -1,7 +1,6 @@
 import NavBar from "./components/nav-bar/navBar";
-import Footer from "./components/footer/Footers";
-
 import "./App.scss"
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 function App() {
   console.clear();

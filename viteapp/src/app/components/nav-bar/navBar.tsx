@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react'
-
 const NavBar = () => {
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
