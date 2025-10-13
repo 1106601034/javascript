@@ -1,6 +1,13 @@
-import { isInRange } from './Archieve/Toolkits.js';
-import { server } from './Archieve/Archieve.js';
+import exprees from 'express';
+const app = exprees();
+const port = 3000;
 
-// console.log(isInRange(1,2,3));
-server();
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
+app.listen(port, () => {
+    console.log(`Server is running...`);
+    console.log(`Example app listening on port http://localhost:${port}/`);
+    console.log(`Press Ctrl+C to stop the server`);
+});
