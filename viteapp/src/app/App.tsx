@@ -5,19 +5,20 @@ import "./App.scss";
 
 import NavBarExample from "./components/nav-bar/nav-bar-example-1";
 import Footer from "./components/footer/Footers";
-import Calculater from "./components/Calculater";
+import NotFound from "./components/404-not-found/404-not-found";
 
 function App() {
-  console.clear();
   return (
-    <div data-bs-theme="dark">
+    <div data-bs-theme="light">
       <Router>
         <NavBarExample />
         <div className="container-fluid">
           <div className="main-area">
             <Routes>
-              <Route path="/Calculater" element={<Calculater />}></Route>
-              <Route path="*" element={<h1>404 Not Found</h1>} />
+              {/* <Route path="/Calculater" element={<Calculater />}>
+                <Route path="Calculater" element={<Calculater />}></Route>
+              </Route> */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </div>
