@@ -1,7 +1,7 @@
 // Example.js
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { increment } from "../actions/actions";
+import { increment } from "./actions";
 
 const ReduxExampleJS = () => {
   const counter = useSelector((state) => state.counter);
