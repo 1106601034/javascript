@@ -1,11 +1,18 @@
-// reducers.js
-const initialState = {
+// reducers.ts
+import type { Reducer } from "@reduxjs/toolkit";
+import { INCREMENT } from "./actions";
+
+export type CounterState = {
+  counter: number;
+};
+
+const initialState: CounterState = {
   counter: 0,
 };
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer: Reducer<CounterState> = (state = initialState, action) => {
   switch (action.type) {
-    case "INCREMENT":
+    case INCREMENT:
       return {
         ...state,
         counter: state.counter + 1,

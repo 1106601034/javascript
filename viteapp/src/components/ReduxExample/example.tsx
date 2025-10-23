@@ -1,11 +1,12 @@
-// Example.js
+// Example.tsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment } from "./actions";
+import type { AppDispatch, RootState } from "./store";
 
-const Example = () => {
-  const counter = useSelector((state) => state.counter);
-  const dispatch = useDispatch();
+const ReduxExampleTSX: React.FC = () => {
+  const counter = useSelector<RootState, number>((state) => state.counter);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleIncrement = () => {
     dispatch(increment());
@@ -19,4 +20,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default ReduxExampleTSX;
