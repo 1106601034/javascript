@@ -2,9 +2,8 @@
 // Implements the Redux store configuration for the example counter.
 import { configureStore } from "@reduxjs/toolkit";
 // Imports Redux Toolkit's helper to set up the store with sensible defaults.
-import rootReducer from "./reducers";
+import rootReducer from "./rootReducer";
 // Pulls in the root reducer defined for the counter state.
-
 const store = configureStore({
   reducer: rootReducer,
 });

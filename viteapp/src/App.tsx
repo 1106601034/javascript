@@ -5,7 +5,7 @@ import store from "./components/ReduxExample/store";
 import NavBarExample from "./components/nav-bar/nav-bar-example-1";
 import Footer from "./components/footer/Footers";
 import NotFound from "./components/404-not-found/404-not-found";
-import ReduxExampleTSX from "./components/ReduxExample/example";
+import Counter from "./components/ReduxExample/Counter/counter";
 import "./App.scss";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
           <div className="container-fluid">
             <div className="main-area">
               <Routes>
-                <Route path="/App1" element={<ReduxExampleTSX />} />
+                <Route path="/" element={<Counter />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>

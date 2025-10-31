@@ -2,7 +2,7 @@
 // Provides the root reducer logic for the counter example.
 import type { Reducer } from "@reduxjs/toolkit";
 // Imports the Reducer type to give the root reducer precise typing.
-import { INCREMENT } from "./actions";
+import { INCREMENT, DECREMENT } from "./Counter/actions";
 // Pulls in the increment action constant for switch matching.
 
 export type CounterState = {
@@ -27,9 +27,14 @@ const rootReducer: Reducer<CounterState> = (state = initialState, action) => {
         counter: state.counter + 1,
         // Increments the counter property immutably.
       };
+    case DECREMENT:
+      return {
+        ...state,
+        counter: state.counter - 1,
+      };
     default:
       return state;
-      // Returns the current state for unhandled actions.
+    // Returns the current state for unhandled actions.
   }
 };
 
