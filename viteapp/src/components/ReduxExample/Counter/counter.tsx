@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 // Imports Redux hooks to read state and dispatch actions.
 import { increment, decrement } from "./actions";
 // Brings in the increment action creator to trigger state updates.
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, RootState } from "./store";
 // Imports the typed dispatch and root state definitions for proper inference.
 
 const ReduxExampleTSX: React.FC = () => {

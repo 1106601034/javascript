@@ -12,7 +12,7 @@ const Task = () => {
   function addNewTask() {
     const task = inputRef.current.value.trim();
     if (task !== "") {
-      dispatch(addToDo(task));
+      dispatch(addTodo(task));
       inputRef.current.value = "";
     }
   }
@@ -20,9 +20,16 @@ const Task = () => {
   return (
     <div className="task-component">
       <div className="add-task">
-        <input type="text" ref={inputRef} placeholder="Enter a new task" />
-        <button onClick={addNewTask}>Add Task</button>
+        <input
+          type="text"
+          placeholder="Add task here..."
+          ref={inputRef}
+          className="taskInput"
+        />
+        <button onClick={addNewTask}>Add task</button>
       </div>
     </div>
   );
 };
+
+export default Task;
