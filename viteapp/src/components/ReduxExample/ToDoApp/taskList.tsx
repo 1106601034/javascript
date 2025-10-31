@@ -13,7 +13,7 @@ const TaskList = () => {
   return (
     <div className="tasklist">
       <div className="display-tasks">
-        <h3>Your tasks:</h3>
+        <h5>Your tasks:</h5>
         <ul className="tasks">
           {tasks.map((task) => (
             <li className="task" key={task.id}>
