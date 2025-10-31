@@ -1,8 +1,17 @@
-const initialState = {
+import type { Task, TodoAction } from "./actions";
+
+export interface TodoState {
+  tasks: Task[];
+}
+
+const initialState: TodoState = {
   tasks: [],
 };
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (
+  state: TodoState = initialState,
+  action: TodoAction
+): TodoState => {
   switch (action.type) {
     case "ADD_TASK":
       return {

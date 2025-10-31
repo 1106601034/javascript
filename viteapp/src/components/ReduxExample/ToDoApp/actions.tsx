@@ -1,32 +1,43 @@
-const addToDo = (text: string) => {
+export interface Task {
+  id: number;
+  text: string;
+}
+
+const addTodo = (text: string) => {
   return {
-    type: "ADD_TASK",
-    playload: {
-      id: new Date().getTime(),
-      text: text,
+    type: "ADD_TASK" as const,
+    payload: {
+      id: Date.now(),
+      text,
     },
   };
 };
 
-const modifyToDo = () => {
+const modifyTodo = (task: Task) => {
   return {
-    type: "MODIFY_TASK",
-    playload: {},
+    type: "MODIFY_TASK" as const,
+    payload: task,
   };
 };
 
-const FindToDo = () => {
+const findTodo = (id: number) => {
   return {
-    type: "FIND_TASK",
-    playload: {},
+    type: "FIND_TASK" as const,
+    payload: id,
   };
 };
 
-const DelectToDo = (id: number) => {
+const deleteTodo = (id: number) => {
   return {
-    type: "DELECT_TASK",
-    playload: id,
+    type: "DELETE_TASK" as const,
+    payload: id,
   };
 };
 
-export { addToDo, modifyToDo, FindToDo, DelectToDo };
+export type TodoAction =
+  | ReturnType<typeof addTodo>
+  | ReturnType<typeof modifyTodo>
+  | ReturnType<typeof findTodo>
+  | ReturnType<typeof deleteTodo>;
+
+export { addTodo, modifyTodo, findTodo, deleteTodo };

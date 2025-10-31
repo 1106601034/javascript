@@ -2,18 +2,21 @@ import { useRef } from "react";
 // Allows us to obtain a reference to HTML elements.
 import { useDispatch } from "react-redux";
 // To dispatch the addTodo action.
-import { addToDo } from "./actions";
+import { addTodo } from "./actions";
 // To add new tasks to the state.
+import type { AppDispatch } from "./store";
 
 const Task = () => {
-  const dispatch = useDispatch();
-  const inputRef = useRef(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   function addNewTask() {
-    const task = inputRef.current.value.trim();
-    if (task !== "") {
-      dispatch(addTodo(task));
-      inputRef.current.value = "";
+    const value = inputRef.current?.value.trim();
+    if (value) {
+      dispatch(addTodo(value));
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     }
   }
 

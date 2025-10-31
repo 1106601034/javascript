@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
-import { DelectToDo } from "./actions";
+import { deleteTodo } from "./actions";
+import type { AppDispatch, RootState } from "./store";
 
 const TaskList = () => {
-  const tasks = useSelector((state) => state.tasks);
-  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleDelete = (id: number) => {
-    dispatch(DelectToDo(id));
+    dispatch(deleteTodo(id));
   };
 
   return (
