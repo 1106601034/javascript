@@ -2,19 +2,16 @@
 // Provides a simple typed React + Redux counter example component.
 import React from "react";
 // Pulls in React to define the functional component.
-import { useSelector, useDispatch } from "react-redux";
-// Imports Redux hooks to read state and dispatch actions.
 import { increment, decrement } from "./actions";
 // Brings in the increment action creator to trigger state updates.
-import type { AppDispatch, RootState } from "./store";
-// Imports the typed dispatch and root state definitions for proper inference.
+import { useAppDispatch, useAppSelector } from "../hooks";
 
 const ReduxExampleTSX: React.FC = () => {
   // Declares the functional component typed as a React.FC.
-  const counter = useSelector<RootState, number>((state) => state.counter);
-  // Subscribes to the counter slice from the Redux store with type safety.
-  const dispatch = useDispatch<AppDispatch>();
-  // Retrieves the store dispatch function with the AppDispatch type.
+  const counter = useAppSelector((state) => state.counter.counter);
+  // Subscribes to the counter slice from the unified Redux store with type safety.
+  const dispatch = useAppDispatch();
+  // Retrieves the store dispatch function with proper typing.
 
   const handleIncrement = () => {
     // Defines a click handler that increments the counter.

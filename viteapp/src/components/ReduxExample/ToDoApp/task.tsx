@@ -1,13 +1,11 @@
 import { useRef } from "react";
 // Allows us to obtain a reference to HTML elements.
-import { useDispatch } from "react-redux";
-// To dispatch the addTodo action.
 import { addTodo } from "./actions";
 // To add new tasks to the state.
-import type { AppDispatch } from "./store";
+import { useAppDispatch } from "../hooks";
 
 const Task = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   function addNewTask() {
