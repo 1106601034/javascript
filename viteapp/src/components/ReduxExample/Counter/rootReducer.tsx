@@ -1,42 +1,45 @@
-// reducers.ts
-// Provides the root reducer logic for the counter example.
+// Imports the Reducer type so the reducer signature stays explicit.
 import type { Reducer } from "@reduxjs/toolkit";
-// Imports the Reducer type to give the root reducer precise typing.
+// Imports the defined counter action type constants for switch matching.
 import { INCREMENT, DECREMENT } from "./actions";
-// Pulls in the increment action constant for switch matching.
 
+// Declares the portion of Redux state that this reducer manages.
 export type CounterState = {
+  // Tracks the numeric count value displayed in the UI.
   counter: number;
 };
-// Declares the portion of state managed by this reducer.
 
+// Establishes the default counter state before any actions fire.
 const initialState: CounterState = {
+  // Sets the starting count to zero.
   counter: 0,
 };
-// Sets the counter baseline to zero for the initial Redux store state.
 
+// Implements the reducer function that reacts to counter actions.
 const rootReducer: Reducer<CounterState> = (state = initialState, action) => {
-  // Defines the root reducer handling counter actions with a default state.
+  // Selects logic based on the incoming action type.
   switch (action.type) {
-    // Branches on the action type to update state.
+    // Handles increment actions by adding one to the counter.
     case INCREMENT:
-      // Handles the increment action by producing a new state.
       return {
+        // Keeps any other state fields unchanged.
         ...state,
-        // Retains other properties in the state object.
+        // Updates the counter property immutably with the incremented value.
         counter: state.counter + 1,
-        // Increments the counter property immutably.
       };
+    // Handles decrement actions by subtracting one from the counter.
     case DECREMENT:
       return {
+        // Keeps any other state fields unchanged.
         ...state,
+        // Updates the counter property immutably with the decremented value.
         counter: state.counter - 1,
       };
+    // Returns the existing state for all other action types.
     default:
       return state;
-    // Returns the current state for unhandled actions.
   }
 };
 
+// Exports the reducer so the Redux store can register it under the counter slice.
 export default rootReducer;
-// Exports the reducer for store configuration.

@@ -1,41 +1,42 @@
-// Example.tsx
-// Provides a simple typed React + Redux counter example component.
+// Imports React so the component can use JSX syntax.
 import React from "react";
-// Pulls in React to define the functional component.
+// Imports the increment and decrement action creators for dispatching updates.
 import { increment, decrement } from "./actions";
-// Brings in the increment action creator to trigger state updates.
+// Imports the typed Redux hooks that connect the component to the shared store.
 import { useAppDispatch, useAppSelector } from "../hooks";
 
+// Defines the counter demonstration component with React.FC typing.
 const ReduxExampleTSX: React.FC = () => {
-  // Declares the functional component typed as a React.FC.
+  // Reads the current counter value from the Redux store.
   const counter = useAppSelector((state) => state.counter.counter);
-  // Subscribes to the counter slice from the unified Redux store with type safety.
-  const dispatch = useAppDispatch();
   // Retrieves the store dispatch function with proper typing.
+  const dispatch = useAppDispatch();
 
+  // Handles increment button clicks by dispatching the increment action.
   const handleIncrement = () => {
-    // Defines a click handler that increments the counter.
+    // Dispatches the increment action to update the counter state.
     dispatch(increment());
-    // Dispatches the increment action to the Redux store.
   };
 
+  // Handles decrement button clicks by dispatching the decrement action.
   const handleDecrement = () => {
-    // Defines a click handler that increments the counter.
+    // Dispatches the decrement action to update the counter state.
     dispatch(decrement());
-    // Dispatches the increment action to the Redux store.
   };
 
+  // Renders the counter value and the control buttons.
   return (
-    // Renders the UI showing the counter value and increment button.
+    // Wraps the counter UI in a simple container element.
     <div>
+      {/* Displays the current counter value from Redux state. */}
       <p>Counter: {counter}</p>
-      {/* Displays the current counter state value. */}
+      {/* Binds the increment handler to raise the counter when clicked. */}
       <button onClick={handleIncrement}>Increment</button>
-      {/* Triggers the increment action when clicked. */}
+      {/* Binds the decrement handler to lower the counter when clicked. */}
       <button onClick={handleDecrement}>Decrement</button>
     </div>
   );
 };
 
+// Exports the ReduxExampleTSX component so other modules can render it.
 export default ReduxExampleTSX;
-// Exports the counter example component as default.

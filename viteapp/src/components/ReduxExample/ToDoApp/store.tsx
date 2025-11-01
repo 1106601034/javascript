@@ -1,18 +1,18 @@
-// store.ts
-// Implements the Redux store configuration for the example counter.
+// Imports the Redux Toolkit helper that creates a configured store.
 import { configureStore } from "@reduxjs/toolkit";
-// Imports Redux Toolkit's helper to set up the store with sensible defaults.
+// Imports the todo root reducer that handles all todo actions.
 import RootReducer from "./rootReducer";
-// Pulls in the root reducer defined for the counter state.
+
+// Configures a dedicated store instance for the todo example.
 const store = configureStore({
+  // Registers the todo reducer to process dispatched todo actions.
   reducer: RootReducer,
 });
-// Creates the Redux store instance using the counter reducer.
 
+// Infers the structure of the todo store's state tree.
 export type RootState = ReturnType<typeof store.getState>;
-// Infers the full state shape for useSelector typings.
+// Infers the signature of the dispatch function exposed by the store.
 export type AppDispatch = typeof store.dispatch;
-// Extracts the dispatch type for typed useDispatch usage.
 
+// Exports the configured store so components can access todo state.
 export default store;
-// Exports the configured store for provider setup.

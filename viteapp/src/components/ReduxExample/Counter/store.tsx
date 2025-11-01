@@ -1,18 +1,18 @@
-// store.ts
-// Implements the Redux store configuration for the example counter.
+// Imports the Redux Toolkit helper that builds a store with good defaults.
 import { configureStore } from "@reduxjs/toolkit";
-// Imports Redux Toolkit's helper to set up the store with sensible defaults.
+// Imports the counter reducer that will respond to dispatched counter actions.
 import rootReducer from "./rootReducer";
-// Pulls in the root reducer defined for the counter state.
+
+// Configures a standalone store instance dedicated to the counter demo.
 const store = configureStore({
+  // Registers the counter reducer as the store's root reducer.
   reducer: rootReducer,
 });
-// Creates the Redux store instance using the counter reducer.
 
+// Infers the shape of the state returned by the counter store.
 export type RootState = ReturnType<typeof store.getState>;
-// Infers the full state shape for useSelector typings.
+// Infers the dispatch function signature exposed by the counter store.
 export type AppDispatch = typeof store.dispatch;
-// Extracts the dispatch type for typed useDispatch usage.
 
+// Exports the configured store so components can inject it via a provider if needed.
 export default store;
-// Exports the configured store for provider setup.
