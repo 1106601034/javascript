@@ -19,3 +19,8 @@ Write commit messages in imperative present tense, ideally following `type(scope
 - `src/app/components/Calculater.tsx:6` calls `setCount` during render using undefined variables `input1` and `input2`; this throws immediately and forces an infinite re-render loop, so the calculator never mounts.
 - `src/app/App.tsx:29` invokes `SignInToShowInput()` like a plain function; that violates the Rules of Hooks and causes its state to attach to `App`, leading to React warnings and broken updates.
 - `src/app/App.tsx:11` runs `console.clear()` on every render, wiping useful logs and introducing a side-effect in the render path.
+
+## Code Review 2025-11-01
+- `src/components/ToDoList/HomePage.tsx:122` maps over a hard-coded empty array (`[]`) instead of the `todos` state, so the data table never renders the tasks users add; the feature looks broken even though state updates.
+- `src/components/ToDoList/CourseCard.tsx:24` calls `setEnrollCount` four times per click (two stale updates and two functional updates), so the counter jumps by three instead of one and spams React state updates.
+- `src/components/ToDoList/HomePage.tsx:169` passes `color="black"` to MUI's `Chip`; that value is outside the allowed union (`default | primary | ...`) and fails TypeScript checks during `npm run build`.
