@@ -26,9 +26,12 @@ const rootReducer = (
     // Handles adding new tasks to the collection.
     case "ADD_TASK":
       return {
-        // Copies any other state fields without modification.
+        // copies every existing top-level property of the current state into a new object
         ...state,
-        // Appends the payload task to the tasks array immutably.
+        // overwrite the tasks property  with the updated array.
+        // state.tasks holds the current list of todo items.
+        // ...state.tasks spreads each existing task into a new array literal.
+        // action.payload (the newly created task) is appended as the final element of that new array.
         tasks: [...state.tasks, action.payload],
       };
     // Handles removing tasks from the collection.

@@ -51,7 +51,8 @@ const deleteTodo = (id: number) => {
   };
 };
 
-// Builds a discriminated union of every todo action supported by the reducer.
+// Builds a  union of every todo action supported by the reducer.
+// only those specific actions can be dispatched to the store.
 export type TodoAction =
   | ReturnType<typeof addTodo>
   | ReturnType<typeof modifyTodo>
@@ -59,4 +60,12 @@ export type TodoAction =
   | ReturnType<typeof deleteTodo>;
 
 // Exports the action creators so components and tests can dispatch them.
+// typeof addTodo grabs the function type of addTodo.
+// ReturnType<> is a built-in generic utility that takes a function type and produces the type of its return value.
 export { addTodo, modifyTodo, findTodo, deleteTodo };
+// Since addTodo returns an action object:
+//  { type: "ADD_TASK"; payload: { id: number; text: string } },
+// the expression expands to exactly that structure.
+// Using ReturnType keeps the action typings in sync automatically
+// if you ever change addTodo’s payload,
+// the union type picks it up instantly.
