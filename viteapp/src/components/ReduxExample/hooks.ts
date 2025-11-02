@@ -1,17 +1,20 @@
-// 文件定义了两个自定义 Hook，方便组件在 Redux 中派发动作和读取状态。
-
 // Imports typed React-Redux helpers to customize selector and dispatch hooks.
+// usedispatch is a hook to access the dispatch function from the store.
+// useselector is a hook to access the state.
+// TypedUseSelectorHook is a type that helps define the shape of the state for useSelector.
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-// 从 react-redux 引入了 useDispatch 和 useSelector 这两个标准 Hook，并额、外拿到一个类型辅助 TypedUseSelectorHook，待会儿配合 TypeScript 做类型约束。
 
-// Imports the store's dispatch and state types for type-safe bindings.
+// AppDispatch is the type of the dispatch function for the Redux store.
+// RootState is what the data in the store looks like.
 import type { AppDispatch, RootState } from "./store";
-// 从项目自己的 ./store 中导入 AppDispatch 和 RootState 类型：前者描述了 store 的 dispatch 函数长什么样，后者描述了整个 Redux 状态树的结构。
 
 // Exposes a dispatch hook that is aware of the AppDispatch signature.
+// when other parts of the app call it, they get the store’s “send a message” function with the right shape, which keeps the app from sending anything it shouldn’t.
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-// useAppDispatch 是一个简单的封装，调用 useDispatch<AppDispatch>()，这样以后组件里用它派发动作时就能获得正确的 TypeScript 推断（比如有哪些 thunk 可以调）。
 
 // Exposes a selector hook that is aware of the RootState structure.
+// It lets other parts of the app safely read data from the store, with TypeScript guiding them to the right pieces of information.
+// RootState describes “what the data in the store looks like.”
+// TypedUseSelectorHook<RootState> describes “a function that knows how to read that data safely.”
+// call useAppSelector then you read the store, useAppSelector type must be the function-shaped one.
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-// useAppSelector 则是把默认的 useSelector 赋值给一个带类型的版本；通过 TypedUseSelectorHook<RootState> 告诉 TypeScript“这个 selector 看到的状态就是我们 store 里的 RootState”，组件里再写 useAppSelector(state => state.slice) 时就能自动获得字段提示和类型校验。

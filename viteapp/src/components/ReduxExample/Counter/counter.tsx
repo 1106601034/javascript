@@ -8,11 +8,13 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 // Defines the counter demonstration component with React.FC typing.
 const ReduxExampleTSX: React.FC = () => {
   // Reads the current counter value from the Redux store.
+  // useAppSelector will subscribe to store and grab the latest counter value.
   const counter = useAppSelector((state) => state.counter.counter);
   // Retrieves the store dispatch function with proper typing.
+  // to give a safe way to send actions to the Redux store.
   const dispatch = useAppDispatch();
 
-  // Handles increment button clicks by dispatching the increment action.
+  // a function that handles increment to button to dispatching the increment action.
   const handleIncrement = () => {
     // Dispatches the increment action to update the counter state.
     dispatch(increment());
