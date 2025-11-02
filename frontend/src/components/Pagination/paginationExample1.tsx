@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { data } from "./data.ts";
+import { goToNextPage, goToPrevPage, goToSpecificPage } from "./actions.tsx";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks.ts";
 
 export default function PaginationExample1() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const currentPage = useAppSelector((state) => state.pagination.currentPage);
+  const itemsPerPage = useAppSelector((state) => state.pagination.itemsPerPage);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [itemsPerPage, setItemsPerPage] = useState(10);
 
   function renderData() {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -19,32 +23,34 @@ export default function PaginationExample1() {
     );
   }
 
-  function goToNextPage() {
-    setCurrentPage((prevPage) => prevPage + 1);
-  }
+  const dispatch = useAppDispatch();
 
-  function goToPrevPage() {
-    setCurrentPage((prevPage) => prevPage - 1);
-  }
+  const handleNextPage = () => {
+    dispatch(goToNextPage());
+  };
 
-  function goToSpecificPage(pageNumber: number) {
-    setCurrentPage(pageNumber);
-  }
+  const handlePrevPage = () => {
+    dispatch(goToPrevPage());
+  };
+
+  const handleSpecificPage = (pageNumber) => {
+    dispatch(goToSpecificPage(pageNumber));
+  };
 
   function renderPaginationControls() {
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
     return (
       <div>
-        <button onClick={goToPrevPage} disabled={currentPage === 1}>
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>
           Previous
         </button>
         {Array.from({ length: totalPages }, (_, i) => (
-          <button key={i} onClick={() => goToSpecificPage(i + 1)}>
+          <button key={i} onClick={() => handleSpecificPage(i + 1)}>
             {i + 1}
           </button>
         ))}
-        <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
       </div>
