@@ -1,9 +1,9 @@
 // Pulls in Redux Toolkit helpers for composing reducers and configuring the store.
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 // Imports the counter slice reducer that manages numeric state.
-import counterReducer from "./Counter/rootReducer";
+import counterReducer from "../components/Counter/rootReducer";
 // Imports the todo slice reducer that manages task collections.
-import todoReducer from "./ToDoApp/rootReducer";
+import todoReducer from "../components/ToDoApp/rootReducer";
 
 // Combines the feature reducers into a single root reducer map.
 const rootReducer = combineReducers({

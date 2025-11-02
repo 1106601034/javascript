@@ -3,7 +3,7 @@ import { useRef } from "react";
 // Imports the addTodo action creator to push new tasks into Redux.
 import { addTodo } from "./actions";
 // Imports the typed dispatch hook to interact with the store.
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch } from "../../redux/hooks";
 
 // Defines the component responsible for creating new todo items.
 const Task = () => {

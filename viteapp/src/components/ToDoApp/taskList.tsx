@@ -1,7 +1,7 @@
 // Imports the deleteTodo action creator so tasks can be removed.
 import { deleteTodo } from "./actions";
 // Imports typed hooks for accessing dispatch and state.
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 // Defines the component that renders the list of todo items.
 const TaskList = () => {

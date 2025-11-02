@@ -3,7 +3,7 @@ import React from "react";
 // Imports the increment and decrement action creators for dispatching updates.
 import { increment, decrement } from "./actions";
 // Imports the typed Redux hooks so the component can read from the store and send updates back.
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 // Defines the counter demonstration component with React.FC typing.
 const ReduxExampleTSX: React.FC = () => {
