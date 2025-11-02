@@ -1,6 +1,7 @@
 // Identifies this module as containing counter action definitions.
 export const INCREMENT = "counter/increment" as const;
-// Identifies the action type string for decrement operations while preserving literal typing.
+// Creates and exports a constant string that names the increment action.
+// The as const part freezes the value so TypeScript treats it as the exact string "counter/increment" instead of a generic string type.
 export const DECREMENT = "counter/decrement" as const;
 
 // Describes the shape of increment actions consumed by the reducer.
