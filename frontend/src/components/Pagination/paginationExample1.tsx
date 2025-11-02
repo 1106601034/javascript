@@ -1,6 +1,11 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { data } from "./data.ts";
-import { goToNextPage, goToPrevPage, goToSpecificPage } from "./actions.tsx";
+import {
+  goToNextPage,
+  goToPrevPage,
+  goToSpecificPage,
+  updateItemsPerPage,
+} from "./actions.tsx";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks.ts";
 
 export default function PaginationExample1() {
@@ -37,6 +42,10 @@ export default function PaginationExample1() {
     dispatch(goToSpecificPage(pageNumber));
   };
 
+  const handleItemsPerPage = (pageNumber) => {
+    dispatch(updateItemsPerPage(pageNumber));
+  };
+
   function renderPaginationControls() {
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -53,6 +62,8 @@ export default function PaginationExample1() {
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
+        Display
+        <button onClick={() => handleItemsPerPage(2)}>Item per page.</button>
       </div>
     );
   }

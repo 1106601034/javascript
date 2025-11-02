@@ -20,6 +20,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentPage: action.payload,
       };
+    case "updateItemsPerPage":
+      return {
+        ...state,
+        itemsPerPage: action.payload,
+      };
     default:
       return state;
   }
