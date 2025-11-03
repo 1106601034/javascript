@@ -1,3 +1,6 @@
+import requirements from "./requirementMiddleware.js";
+import validation from "./validationMiddleware.js";
+
 const dataValidation = (req, res) => {
     const { name, email } = req.body;
 
@@ -8,4 +11,4 @@ const dataValidation = (req, res) => {
     });
 }
 
-export default dataValidation;
+export default { requirements, validation, dataValidation };
