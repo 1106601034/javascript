@@ -1,0 +1,28 @@
+{
+    "name": "javascript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "server": "nodemon server.js--prefix Backend",
+        "client": "npm run dev --prefix Frontend",
+        "project": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/1106601034/javascript.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "bugs": {
+        "url": "https://github.com/1106601034/javascript/issues"
+    },
+    "homepage": "https://github.com/1106601034/javascript#readme",
+    "devDependencies": {
+        "concurrently": "^9.2.1",
+        "nodemon": "^3.1.10"
+    }
+}
