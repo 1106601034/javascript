@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-interface ICourseCardProps { difficulty:string}
+import React, { useState, useEffect } from 'react';
+interface ICourseCardProps { difficulty: string }
 // props
-const CourseCard = ({ difficulty }:ICourseCardProps) => {
+const CourseCard = ({ difficulty }: ICourseCardProps) => {
   // state and SetState
   const [isEnrolled, setEnrolled] = useState(false);
   const [showReviewInput, setShowReviewInput] = useState(false);
