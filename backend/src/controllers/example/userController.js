@@ -16,4 +16,4 @@ const getUserByID = (req, res) => {
     res.join(user);
 };
 
-export { getAllUsers, getUserByID };
+export default { getAllUsers, getUserByID };
