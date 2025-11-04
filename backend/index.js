@@ -1,10 +1,13 @@
+import config from "./config/config.js";
 import express from "express";
 import dataValidation from "./components/dataValidation/dataValidation.js";
-import config from "./config/config.js";
+import greeting from "./components/helloWorld/helloWorld.js";
 
 const app = express();
 
 app.use(express.json());
+
+app.get("/", greeting);
 
 app.post("/register",
     dataValidation.requirements,
