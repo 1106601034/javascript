@@ -13,7 +13,7 @@ const getUserByID = (req, res) => {
         id: userID,
         name: 'Alice',
     };
-    res.join(user);
+    res.json(user);
 };
 
 export default { getAllUsers, getUserByID };
