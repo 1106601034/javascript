@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import getUsers from '../controllers/example/userController.js';
-import dataValidation from "../controllers/dataValidation/dataValidation.js";
-import greeting from "../controllers/helloWorld/helloWorld.js";
+import getUsers from '../../../controllers/example/userController.js';
+import dataValidation from "../../../controllers/dataValidation/dataValidation.js";
+import greeting from "../../../controllers/helloWorld/helloWorld.js";
 
 const router = Router();
 

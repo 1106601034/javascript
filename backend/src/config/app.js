@@ -4,6 +4,6 @@ dotenv.config()
 
 export const config = {
     app: {
-        port: parseInt(process.env.PORT || '3000')
+        port: parseInt(process.env.PORT || '8080')
     }
 }
