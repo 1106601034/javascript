@@ -1,27 +1,30 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import createError from "http-errors";
 import cors from "cors";
-import router from "../src/routes/v1/api/routes.js";
+
+import router from "../src/routes/index.js";
+import userRouter from "../src/routes/users.js";
+import ValidationRouter from "../src/routes/dataValidation.js";
+
 import { config } from "../src/config/app.js";
-import pageNotFound from "../src/controllers/pageNotFound/pageNotFound.js";
+import pageNotFound from "../src/middlewares/pageNotFound/pageNotFound.js";
 
-const startServer = () => {
-    const expressApp = express();
-    try {
-        expressApp.listen(config.app.port, () => {
-            console.log(`Server running on http://localhost:${config.app.port}`);
-        });
-    } catch (error) {
-        console.log(error);
-        process.exit();
-    }
-    return expressApp;
-}
+const app = express();
 
-export default function loadServer() {
-    const app = startServer();
-    app.use(cors());
-    app.use('/api', router);
-    app.use(express.json());
-    app.use(pageNotFound);
-    return app;
-}
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+
+app.use("/", router);
+app.use("/users", userRouter);
+app.use("/validation", ValidationRouter);
+
+app.use(pageNotFound);
+
+app.listen(config.app.port, () => {
+    console.log(`Server running on http://localhost:${config.app.port}`);
+});
+
+export default app;
