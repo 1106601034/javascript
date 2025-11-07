@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import greeting from "../components/helloWorld/helloWorld.js";
-import dataValidationModule from "../components/dataValidation/dataValidation.js";
+import greeting from "../src/controllers/helloWorld/helloWorld.js";
+import dataValidationModule from "../src/controllers/dataValidation/dataValidation.js";
+import pageNotFound from "../src/middlewares/pageNotFound/pageNotFound.js";
+import errorHandler from "../src/middlewares/errorHandler/errorHandler.js";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
 
@@ -17,6 +19,7 @@ const createResponseStub = () => {
         statusCode: 200,
         body: undefined,
         sentText: undefined,
+        headersSent: false,
         status(code) {
             this.statusCode = code;
             return this;
@@ -96,4 +99,29 @@ test("validation middleware responds with errors when requirements fail", { conc
     assert.equal(res.body.message, "Validation failed");
     assert.ok(Array.isArray(res.body.errors.name));
     assert.ok(res.body.errors.name.includes("Name is required"));
+});
+
+test("pageNotFound forwards a 404 error with helpful message", () => {
+    const req = { method: "GET", originalUrl: "/missing" };
+    const nextCalls = [];
+
+    pageNotFound(req, {}, (err) => nextCalls.push(err));
+
+    assert.equal(nextCalls.length, 1);
+    assert.equal(nextCalls[0].status, 404);
+    assert.equal(nextCalls[0].message, "Cannot GET /missing");
+});
+
+test("errorHandler serializes errors into JSON responses", () => {
+    const err = new Error("Boom");
+    err.status = 418;
+    const res = createResponseStub();
+
+    errorHandler(err, {}, res, () => {});
+
+    assert.equal(res.statusCode, 418);
+    assert.deepEqual(res.body, {
+        success: false,
+        message: "Boom",
+    });
 });

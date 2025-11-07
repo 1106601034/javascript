@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import greeting from "../controllers/helloWorld/helloWorld.js";
+import index from "../controllers/index/index.js";
 
 const router = Router();
 
-router.get('/', greeting);
-
+router.get('/', index);
 
 export default router;
