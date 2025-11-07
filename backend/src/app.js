@@ -4,12 +4,12 @@ import morgan from "morgan";
 import createError from "http-errors";
 import cors from "cors";
 
-import router from "../src/routes/index.js";
-import userRouter from "../src/routes/users.js";
-import ValidationRouter from "../src/routes/dataValidation.js";
+import router from "./routes/index.js";
+import userRouter from "./routes/users.js";
+import ValidationRouter from "./routes/dataValidation.js";
 
-import { config } from "../src/config/app.js";
-import pageNotFound from "../src/middlewares/pageNotFound/pageNotFound.js";
+import { config } from "./config/app.js";
+import pageNotFound from "./middlewares/pageNotFound/pageNotFound.js";
 
 const app = express();
 
