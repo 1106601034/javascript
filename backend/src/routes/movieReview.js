@@ -1,0 +1,23 @@
+import { Router } from 'express';
+const {
+    addMovie,
+    getAllMovies,
+    getMovieById,
+    updateMovieById,
+    deleteMovieById,
+    getReviewsByMovie,
+    addReviewsByMovie,
+} = require('../controllers/movieReview/movieReview.js');
+
+const movieRouter = Router();
+
+movieRouter.post('/', addMovie);
+movieRouter.get('/', getAllMovies);
+movieRouter.get('/:id', getMovieById);
+
+movieRouter.put('/:id', updateMovieById);
+movieRouter.delete('/:id', deleteMovieById);
+movieRouter.get('/:id/reviews', getReviewsByMovie);
+movieRouter.post('/:id/reviews', addReviewsByMovie);
+
+export default movieRouter;
