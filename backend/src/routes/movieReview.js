@@ -1,5 +1,5 @@
 import { Router } from 'express';
-const {
+import {
     addMovie,
     getAllMovies,
     getMovieById,
@@ -7,7 +7,7 @@ const {
     deleteMovieById,
     getReviewsByMovie,
     addReviewsByMovie,
-} = require('../controllers/movieReview/movieReview.js');
+} from '../controllers/movieReview/movieReview.js';
 
 const movieRouter = Router();
 
