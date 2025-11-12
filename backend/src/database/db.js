@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
+import { config } from "../config/env.js"
 import logger from "../config/winston.js";
 
-const connectToDB = async () => {
-    if (!process.env.CONNECTION_STRING) {
-        s
+export const connectToDB = async () => {
+    const db = config.database.connect_string;
+
+    if (!db) {
         logger.error("connection string not defined");
         process.exit(1);
     }
 
     const conn = mongoose.connection;
-    conn.on("connected", () => logger.info(`DB connected, ${connectionString}`));
+    conn.on("connected", () => logger.info(`DB connected, ${db}`));
     conn.on('open', () => logger.info('mongodb connection open'));
     conn.on("disconnected", () => logger.info("mongodb connection lost"));
     conn.on('reconnected', () => logger.info('mongodb connection reconnected'));
@@ -19,9 +21,11 @@ const connectToDB = async () => {
         logger.error(error.message);
     });
 
-    const connectionString = process.env.CONNECTION_STRING;
-    // const connectionString = process.env.MONGOOSE_STRING;
-    return await mongoose.connect(connectionString);
+    try {
+        await mongoose.connect(db);
+        console.log("MongoDB is Connected...");
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
 };
-
-export default connectToDB;
