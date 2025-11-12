@@ -3,6 +3,7 @@ import logger from "../config/winston.js";
 
 const connectToDB = async () => {
     if (!process.env.CONNECTION_STRING) {
+        s
         logger.error("connection string not defined");
         process.exit(1);
     }
