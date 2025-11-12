@@ -1,5 +1,7 @@
-import test from "node:test";
 import assert from "node:assert/strict";
+import test from "node:test";
+import type { Request, Response } from "express";
+import type { ValidationChain } from "express-validator";
 import greeting from "../src/controllers/helloWorld/helloWorld.js";
 import dataValidationModule from "../src/controllers/dataValidation/dataValidation.js";
 import pageNotFound from "../src/middlewares/pageNotFound.js";
@@ -7,28 +9,37 @@ import errorHandler from "../src/middlewares/errorHandler.js";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
 
-const runRequirements = async (req) => {
-    for (const rule of requirements) {
-        // Run sequentially to ensure each validator has access to prior sanitizers.
-        await rule.run(req);
+type MutableRequest = Partial<Request> & { body?: Record<string, unknown> };
+
+const runRequirements = async (req: MutableRequest): Promise<void> => {
+    for (const rule of requirements as ValidationChain[]) {
+        await rule.run(req as Request);
     }
 };
 
-const createResponseStub = () => {
-    const res = {
+interface ResponseStub {
+    headersSent: boolean;
+    statusCode: number;
+    body?: unknown;
+    sentText?: string;
+    status(code: number): ResponseStub;
+    json(payload: unknown): ResponseStub;
+    send(text: string): ResponseStub;
+}
+
+const createResponseStub = (): ResponseStub => {
+    const res: ResponseStub = {
         statusCode: 200,
-        body: undefined,
-        sentText: undefined,
         headersSent: false,
-        status(code) {
+        status(code: number) {
             this.statusCode = code;
             return this;
         },
-        json(payload) {
+        json(payload: unknown) {
             this.body = payload;
             return this;
         },
-        send(text) {
+        send(text: string) {
             this.sentText = text;
             return this;
         },
@@ -39,13 +50,13 @@ const createResponseStub = () => {
 
 test("greeting sends Hello World! response", { concurrency: false }, () => {
     const res = createResponseStub();
-    greeting({}, res);
+    greeting({} as Request, res as unknown as Response);
 
     assert.equal(res.sentText, "Hello World!");
 });
 
 test("registration handler returns success payload when requirements pass", { concurrency: false }, async () => {
-    const req = {
+    const req: MutableRequest = {
         body: {
             name: "Jane Doe",
             email: "jane.doe@example.com",
@@ -57,14 +68,14 @@ test("registration handler returns success payload when requirements pass", { co
 
     await runRequirements(req);
 
-    validation(req, res, () => {
+    validation(req as Request, res as unknown as Response, () => {
         nextCalled = true;
     });
 
     assert.equal(nextCalled, true);
     assert.equal(res.body, undefined);
 
-    dataValidation(req, res);
+    dataValidation(req as Request, res as unknown as Response, () => undefined);
 
     assert.equal(res.statusCode, 201);
     assert.deepEqual(res.body, {
@@ -78,7 +89,7 @@ test("registration handler returns success payload when requirements pass", { co
 });
 
 test("validation middleware responds with errors when requirements fail", { concurrency: false }, async () => {
-    const req = {
+    const req: MutableRequest = {
         body: {
             email: "jane.doe@example.com",
             password: "Password1",
@@ -89,35 +100,43 @@ test("validation middleware responds with errors when requirements fail", { conc
 
     await runRequirements(req);
 
-    validation(req, res, () => {
+    validation(req as Request, res as unknown as Response, () => {
         nextCalled = true;
     });
 
     assert.equal(nextCalled, false);
     assert.equal(res.statusCode, 400);
-    assert.equal(res.body.success, false);
-    assert.equal(res.body.message, "Validation failed");
-    assert.ok(Array.isArray(res.body.errors.name));
-    assert.ok(res.body.errors.name.includes("Name is required"));
+
+    const responseBody = res.body as {
+        success: boolean;
+        message: string;
+        errors: Record<string, string[]>;
+    };
+
+    assert.equal(responseBody.success, false);
+    assert.equal(responseBody.message, "Validation failed");
+    assert.ok(Array.isArray(responseBody.errors.name));
+    assert.ok(responseBody.errors.name.includes("Name is required"));
 });
 
 test("pageNotFound forwards a 404 error with helpful message", () => {
-    const req = { method: "GET", originalUrl: "/missing" };
-    const nextCalls = [];
+    const req = { method: "GET", originalUrl: "/missing" } as Request;
+    const nextCalls: unknown[] = [];
 
-    pageNotFound(req, {}, (err) => nextCalls.push(err));
+    pageNotFound(req, {} as Response, (err) => nextCalls.push(err));
+
+    const [firstError] = nextCalls as Array<{ status: number; message: string }>;
 
     assert.equal(nextCalls.length, 1);
-    assert.equal(nextCalls[0].status, 404);
-    assert.equal(nextCalls[0].message, "Cannot GET /missing");
+    assert.equal(firstError.status, 404);
+    assert.equal(firstError.message, "Cannot GET /missing");
 });
 
 test("errorHandler serializes errors into JSON responses", () => {
-    const err = new Error("Boom");
-    err.status = 418;
+    const err = Object.assign(new Error("Boom"), { status: 418 });
     const res = createResponseStub();
 
-    errorHandler(err, {}, res, () => { });
+    errorHandler(err, {} as Request, res as unknown as Response, () => { });
 
     assert.equal(res.statusCode, 418);
     assert.deepEqual(res.body, {

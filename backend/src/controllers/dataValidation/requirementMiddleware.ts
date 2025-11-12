@@ -1,6 +1,6 @@
-import { body } from "express-validator";
+import { body, type ValidationChain } from "express-validator";
 
-const requirements = [
+const requirements: ValidationChain[] = [
     body("name")
         .notEmpty({ ignore_whitespace: true }).withMessage("Name is required")
         .trim()

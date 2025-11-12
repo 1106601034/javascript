@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import dataValidation from "../controllers/dataValidation/dataValidation.js";
+import dataValidation from "../controllers/dataValidation/dataValidation.ts";
 
 const router = Router();
 
