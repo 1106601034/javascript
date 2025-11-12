@@ -1,10 +1,65 @@
 import type { RequestHandler } from "express";
+import type { FilterQuery } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { Movie } from "../../models/movie.ts";
+import type { MovieDocument } from "../../models/movie.ts";
+
+type MovieFilter = FilterQuery<MovieDocument>;
+
+const buildMovieFilter = (rawId?: string): MovieFilter | null => {
+    if (!rawId) {
+        return null;
+    }
+
+    if (isValidObjectId(rawId)) {
+        return { _id: rawId };
+    }
+
+    const numericId = Number(rawId);
+    if (Number.isFinite(numericId)) {
+        return { id: numericId };
+    }
+
+    return null;
+};
+
+const calculateAverageRating = (reviews: MovieDocument["reviews"]): number => {
+    const reviewList = Array.isArray(reviews) ? reviews : [];
+
+    const ratings = reviewList
+        .map((review) => {
+            if (typeof review === "number") {
+                return review;
+            }
+
+            if (review && typeof review === "object" && "rating" in review) {
+                const value = Number((review as { rating?: unknown }).rating);
+                return Number.isFinite(value) ? value : NaN;
+            }
+
+            return NaN;
+        })
+        .filter((value): value is number => Number.isFinite(value));
+
+    if (ratings.length === 0) {
+        return 0;
+    }
+
+    const total = ratings.reduce((sum, value) => sum + value, 0);
+    return Number((total / ratings.length).toFixed(2));
+};
 
 export const addMovie: RequestHandler = async (req, res) => {
+    const { title, description, types } = req.body;
+    // data validation
+    if (!title || !description || !Array.isArray(types) || types.length === 0) {
+        return res.status(400).json({
+            message: 'All fields are required and types must be a non-empty array',
+        });
+    }
     try {
         await Movie.create(req.body);
-        res.json({ msg: "Book added successfully" });
+        res.status(201).json({ msg: "Movie added successfully" });
     } catch {
         res.status(400).json({ error: "Unable to add this movie" });
     }
@@ -19,8 +74,135 @@ export const getAllMovies: RequestHandler = async (_req, res) => {
     }
 };
 
-export const getMovieById: RequestHandler = (_req, _res, _next) => { };
-export const updateMovieById: RequestHandler = (_req, _res, _next) => { };
-export const deleteMovieById: RequestHandler = (_req, _res, _next) => { };
-export const getReviewsByMovie: RequestHandler = (_req, _res, _next) => { };
-export const addReviewsByMovie: RequestHandler = (_req, _res, _next) => { };
+export const getMovieById: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    try {
+        const movie = await Movie.findOne(filter);
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        res.json(movie);
+    } catch {
+        res.status(500).json({ error: "Unable to fetch movie" });
+    }
+};
+
+export const updateMovieById: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    try {
+        const movie = await Movie.findOneAndUpdate(filter, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        res.json(movie);
+    } catch {
+        res.status(400).json({ error: "Unable to update this movie" });
+    }
+};
+
+export const deleteMovieById: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    try {
+        const movie = await Movie.findOneAndDelete(filter);
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        res.json({ msg: "Movie deleted successfully" });
+    } catch {
+        res.status(500).json({ error: "Unable to delete this movie" });
+    }
+};
+
+export const getReviewsByMovie: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    try {
+        const movie = await Movie.findOne(filter, { reviews: 1, averageRating: 1, title: 1 });
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        res.json({
+            title: movie.title,
+            averageRating: movie.averageRating,
+            reviews: Array.isArray(movie.reviews) ? movie.reviews : [],
+        });
+    } catch {
+        res.status(500).json({ error: "Unable to fetch reviews" });
+    }
+};
+
+export const addReviewsByMovie: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    const body = (typeof req.body === "object" && req.body !== null)
+        ? (req.body as Record<string, unknown>)
+        : {};
+    const ratingValue = Number((body as { rating?: unknown }).rating);
+
+    if (!Number.isFinite(ratingValue) || ratingValue < 0 || ratingValue > 5) {
+        return res.status(400).json({ error: "Rating must be a number between 0 and 5" });
+    }
+
+    try {
+        const movie = await Movie.findOne(filter);
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        const reviews = Array.isArray(movie.reviews) ? movie.reviews : [];
+        const reviewPayload = {
+            ...body,
+            rating: ratingValue,
+            createdAt: new Date().toISOString(),
+        };
+
+        reviews.push(reviewPayload);
+        movie.reviews = reviews;
+        movie.averageRating = calculateAverageRating(reviews);
+
+        await movie.save();
+
+        res.status(201).json({
+            msg: "Review added successfully",
+            averageRating: movie.averageRating,
+            reviews,
+        });
+    } catch {
+        res.status(500).json({ error: "Unable to add review" });
+    }
+};

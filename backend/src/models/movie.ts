@@ -19,7 +19,6 @@ const movieSchema = new Schema({
     },
     averageRating: {
         type: Number,
-        required: true,
     },
     reviews: {
         type: [Schema.Types.Mixed],
