@@ -16,7 +16,6 @@ const connectToDB = async () => {
     conn.on('close', () => logger.info('mongodb connection close'));
     conn.on("error", (error) => {
         logger.error(error.message);
-        process.exit(1);
     });
 
     const connectionString = process.env.CONNECTION_STRING;
