@@ -7,7 +7,7 @@ import ValidationRouter from "./routes/dataValidation.js";
 import movieReview from "./routes/movieReview.js";
 import logger from "./config/winston.js";
 import pageNotFound from "./middlewares/pageNotFound.js";
-import errorHandler from "./middlewares/errorHandler.js";
+
 
 const app = express();
 connectToDB();
