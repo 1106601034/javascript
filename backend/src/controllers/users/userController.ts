@@ -11,11 +11,9 @@ const USERS: User[] = [
     { id: 3, name: "Caroline" },
 ];
 
-const getAllUsers: RequestHandler = (_req, res) => {
-    res.json(USERS);
-};
+export const getAllUsers: RequestHandler = (_req, res) => res.json(USERS);
 
-const getUserByID: RequestHandler = (req, res) => {
+export const getUserByID: RequestHandler = (req, res) => {
     const requestedId = Number(req.params.id);
 
     if (!Number.isFinite(requestedId)) {
@@ -28,7 +26,6 @@ const getUserByID: RequestHandler = (req, res) => {
         return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);
+    return res.json(user);
 };
 
-export default { getAllUsers, getUserByID };

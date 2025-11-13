@@ -3,10 +3,7 @@ import type { FilterQuery } from "mongoose";
 import { isValidObjectId } from "mongoose";
 import { Movie } from "../../models/movie.js";
 import type { MovieDocument } from "../../models/movie.js";
-import type { ReviewDocument } from "../../models/review.js";
-
 type MovieFilter = FilterQuery<MovieDocument>;
-type ReviewFilter = FilterQuery<ReviewDocument>;
 
 const normalizeTypes = (rawTypes: unknown): string[] => {
     if (!Array.isArray(rawTypes)) {
@@ -86,18 +83,18 @@ export const addMovie: RequestHandler = async (req, res) => {
 
     try {
         const movie = await Movie.create(moviePayload);
-        res.status(201).json(movie);
+        return res.status(201).json(movie);
     } catch {
-        res.status(400).json({ error: "Unable to add this movie" });
+        return res.status(400).json({ error: "Unable to add this movie" });
     }
 };
 
 export const getAllMovies: RequestHandler = async (_req, res) => {
     try {
         const movies = await Movie.find();
-        res.json(movies);
+        return res.json(movies);
     } catch {
-        res.status(404).json({ nomoviesfound: "No movies found" });
+        return res.status(404).json({ nomoviesfound: "No movies found" });
     }
 };
 
@@ -115,9 +112,9 @@ export const getMovieById: RequestHandler = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        res.json(movie);
+        return res.json(movie);
     } catch {
-        res.status(500).json({ error: "Unable to fetch movie" });
+        return res.status(500).json({ error: "Unable to fetch movie" });
     }
 };
 
@@ -138,9 +135,9 @@ export const updateMovieById: RequestHandler = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        res.json(movie);
+        return res.json(movie);
     } catch {
-        res.status(400).json({ error: "Unable to update this movie" });
+        return res.status(400).json({ error: "Unable to update this movie" });
     }
 };
 
@@ -158,9 +155,9 @@ export const deleteMovieById: RequestHandler = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        res.json({ msg: "Movie deleted successfully" });
+        return res.json({ msg: "Movie deleted successfully" });
     } catch {
-        res.status(500).json({ error: "Unable to delete this movie" });
+        return res.status(500).json({ error: "Unable to delete this movie" });
     }
 };
 
@@ -178,13 +175,13 @@ export const getReviewsByMovie: RequestHandler = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        res.json({
+        return res.json({
             title: movie.title,
             averageRating: movie.averageRating,
             reviews: Array.isArray(movie.reviews) ? movie.reviews : [],
         });
     } catch {
-        res.status(500).json({ error: "Unable to fetch reviews" });
+        return res.status(500).json({ error: "Unable to fetch reviews" });
     }
 };
 
@@ -224,12 +221,12 @@ export const addReviewsByMovie: RequestHandler = async (req, res) => {
 
         await movie.save();
 
-        res.status(201).json({
+        return res.status(201).json({
             msg: "Review added successfully",
             averageRating: movie.averageRating,
             reviews,
         });
     } catch {
-        res.status(500).json({ error: "Unable to add review" });
+        return res.status(500).json({ error: "Unable to add review" });
     }
 };

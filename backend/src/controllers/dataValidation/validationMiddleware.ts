@@ -29,7 +29,7 @@ const validation: RequestHandler = (req, res, next) => {
         });
     }
 
-    next();
+    return next();
 };
 
 export default validation;
