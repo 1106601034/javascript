@@ -10,7 +10,6 @@ import pageNotFound from "./middlewares/pageNotFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import index from "./routes/index.js";
 const app = express();
-connectToDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -23,6 +22,17 @@ app.use("/movieReview", movieReview);
 app.use(pageNotFound);
 app.use(errorHandler);
 
-app.listen(config.app.port, () => {
-    logger.info(`Server running on ${config.app.baseUrl}:${config.app.port}`);
-});
+const startServer = async (): Promise<void> => {
+    try {
+        await connectToDB();
+        app.listen(config.app.port, () => {
+            logger.info(`Server running on ${config.app.baseUrl}:${config.app.port}`);
+        });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error(`Failed to start server: ${message}`);
+        process.exit(1);
+    }
+};
+
+void startServer();

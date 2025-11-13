@@ -7,10 +7,19 @@ import dataValidationModule from "../src/controllers/dataValidation/dataValidati
 import pageNotFound from "../src/middlewares/pageNotFound.js";
 import errorHandler from "../src/middlewares/errorHandler.js";
 import userController from "../src/controllers/users/userController.js";
+import {
+    addReviewsByMovie,
+    getReviewsByMovie,
+    updateMovieById,
+} from "../src/controllers/movieReview/movieReview.js";
+import { Movie } from "../src/models/movie.js";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
 
-type MutableRequest = Partial<Request> & { body?: Record<string, unknown> };
+type MutableRequest = Partial<Request> & {
+    body?: Record<string, unknown>;
+    params?: Record<string, string>;
+};
 
 const runRequirements = async (req: MutableRequest): Promise<void> => {
     for (const rule of requirements as ValidationChain[]) {
@@ -48,6 +57,20 @@ const createResponseStub = (): ResponseStub => {
 
     return res;
 };
+
+const overrideMovieStatic = <K extends keyof typeof Movie>(
+    method: K,
+    implementation: unknown,
+): (() => void) => {
+    const movieTarget = Movie as typeof Movie & Record<string, unknown>;
+    const original = movieTarget[method];
+    movieTarget[method] = implementation as typeof original;
+    return () => {
+        movieTarget[method] = original;
+    };
+};
+
+const VALID_MOVIE_ID = "507f191e810c19729de860ea";
 
 test("greeting sends Hello World! response", { concurrency: false }, () => {
     const res = createResponseStub();
@@ -174,4 +197,124 @@ test("getUserByID validates that the id is numeric", () => {
 
     assert.equal(res.statusCode, 400);
     assert.deepEqual(res.body, { message: "User id must be a number" });
+});
+
+test("updateMovieById rejects attempts to modify restricted fields", { concurrency: false }, async () => {
+    const req: MutableRequest = {
+        params: { id: VALID_MOVIE_ID },
+        body: { reviews: [] },
+    };
+    const res = createResponseStub();
+
+    await updateMovieById(req as Request, res as unknown as Response, () => undefined);
+
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, { error: 'Field "reviews" cannot be modified' });
+});
+
+test("updateMovieById updates only allowed fields and normalizes payloads", { concurrency: false }, async () => {
+    const req: MutableRequest = {
+        params: { id: VALID_MOVIE_ID },
+        body: {
+            title: "  Updated Title ",
+            description: "  Updated Description ",
+            types: [" Action ", "Drama "],
+            legacyId: "42",
+        },
+    };
+    const res = createResponseStub();
+    let receivedUpdate: Record<string, unknown> | undefined;
+
+    const restore = overrideMovieStatic("findOneAndUpdate", ((filter: Record<string, unknown>, update: Record<string, unknown>) => {
+        receivedUpdate = update;
+        return Promise.resolve({
+            _id: (filter as { _id: string })._id,
+            ...update,
+        }) as unknown as ReturnType<typeof Movie.findOneAndUpdate>;
+    }) as unknown as typeof Movie.findOneAndUpdate);
+
+    try {
+        await updateMovieById(req as Request, res as unknown as Response, () => undefined);
+    } finally {
+        restore();
+    }
+
+    assert.equal(res.statusCode, 200);
+
+    const responseBody = res.body as Record<string, unknown>;
+    assert.equal(responseBody.title, "Updated Title");
+    assert.deepEqual(receivedUpdate, {
+        title: "Updated Title",
+        description: "Updated Description",
+        types: ["Action", "Drama"],
+        legacyId: 42,
+    });
+});
+
+test("getReviewsByMovie returns stored reviews with metadata", { concurrency: false }, async () => {
+    const req: MutableRequest = { params: { id: VALID_MOVIE_ID } };
+    const res = createResponseStub();
+
+    const restore = overrideMovieStatic("findOne", ((_filter: Record<string, unknown>, projection: Record<string, number>) => {
+        assert.deepEqual(projection, { reviews: 1, averageRating: 1, title: 1 });
+        return Promise.resolve({
+            _id: VALID_MOVIE_ID,
+            title: "Inception",
+            averageRating: 4.5,
+            reviews: [{ reviewer: "Jane", rating: 5 }],
+        }) as unknown as ReturnType<typeof Movie.findOne>;
+    }) as unknown as typeof Movie.findOne);
+
+    try {
+        await getReviewsByMovie(req as Request, res as unknown as Response, () => undefined);
+    } finally {
+        restore();
+    }
+
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, {
+        title: "Inception",
+        averageRating: 4.5,
+        reviews: [{ reviewer: "Jane", rating: 5 }],
+    });
+});
+
+test("addReviewsByMovie saves reviews and recalculates averages", { concurrency: false }, async () => {
+    const req: MutableRequest = {
+        params: { id: VALID_MOVIE_ID },
+        body: { rating: 3, comment: "Great visuals" },
+    };
+    const res = createResponseStub();
+    let saveCalled = false;
+    const movieRecord = {
+        _id: VALID_MOVIE_ID,
+        title: "Inception",
+        reviews: [{ rating: 5 }],
+        averageRating: 5,
+        save: async () => {
+            saveCalled = true;
+        },
+    };
+
+    const restore = overrideMovieStatic("findOne", (() => Promise.resolve(movieRecord)) as unknown as typeof Movie.findOne);
+
+    try {
+        await addReviewsByMovie(req as Request, res as unknown as Response, () => undefined);
+    } finally {
+        restore();
+    }
+
+    assert.equal(saveCalled, true);
+    assert.equal(res.statusCode, 201);
+
+    const responseBody = res.body as {
+        msg: string;
+        averageRating: number;
+        reviews: Array<{ rating: number; comment?: string }>;
+    };
+
+    assert.equal(responseBody.msg, "Review added successfully");
+    assert.equal(responseBody.averageRating, 4);
+    assert.equal(movieRecord.reviews.length, 2);
+    assert.equal(movieRecord.reviews.at(-1)?.rating, 3);
 });

@@ -10,8 +10,10 @@ const reviewSchema = new Schema({
         required: true,
     },
     rating: {
-        type: String,
+        type: Number,
         required: true,
+        min: 0,
+        max: 5,
     },
 });
 
