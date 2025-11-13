@@ -16,10 +16,17 @@ const getAllUsers: RequestHandler = (_req, res) => {
 };
 
 const getUserByID: RequestHandler = (req, res) => {
-    const user = {
-        id: req.params.id,
-        name: "Alice",
-    };
+    const requestedId = Number(req.params.id);
+
+    if (!Number.isFinite(requestedId)) {
+        return res.status(400).json({ message: "User id must be a number" });
+    }
+
+    const user = USERS.find((entry) => entry.id === requestedId);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
 
     res.json(user);
 };

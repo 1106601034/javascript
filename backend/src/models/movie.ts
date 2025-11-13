@@ -1,30 +1,41 @@
-import { Schema, model } from "mongoose";
-import type { InferSchemaType } from "mongoose";
+import { Schema, model, type InferSchemaType } from "mongoose";
 
 const movieSchema = new Schema({
-    id: {
+    legacyId: {
         type: Number,
-        required: true,
+        required: false,
     },
     title: {
         type: String,
         required: true,
+        trim: true,
     },
     description: {
         type: String,
+        default: "",
+        trim: true,
     },
-    type: {
-        type: String,
+    types: {
+        type: [String],
         required: true,
+        validate: {
+            validator(values: unknown[]): boolean {
+                return Array.isArray(values)
+                    && values.every((value) => typeof value === "string" && value.trim().length > 0)
+                    && values.length > 0;
+            },
+            message: "types must be a non-empty array of strings",
+        },
     },
     averageRating: {
         type: Number,
+        default: 0,
     },
     reviews: {
         type: [Schema.Types.Mixed],
         default: [],
     },
-});
+}, { timestamps: true });
 
 export type MovieDocument = InferSchemaType<typeof movieSchema>;
 

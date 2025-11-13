@@ -6,6 +6,7 @@ import greeting from "../src/controllers/helloWorld/helloWorld.js";
 import dataValidationModule from "../src/controllers/dataValidation/dataValidation.js";
 import pageNotFound from "../src/middlewares/pageNotFound.js";
 import errorHandler from "../src/middlewares/errorHandler.js";
+import userController from "../src/controllers/users/userController.js";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
 
@@ -143,4 +144,34 @@ test("errorHandler serializes errors into JSON responses", () => {
         success: false,
         message: "Boom",
     });
+});
+
+test("getUserByID returns the requested user when it exists", () => {
+    const req = { params: { id: "2" } };
+    const res = createResponseStub();
+
+    userController.getUserByID(req as unknown as Request, res as unknown as Response, () => undefined);
+
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, { id: 2, name: "Bob" });
+});
+
+test("getUserByID returns a 404 when the user cannot be found", () => {
+    const req = { params: { id: "99" } };
+    const res = createResponseStub();
+
+    userController.getUserByID(req as unknown as Request, res as unknown as Response, () => undefined);
+
+    assert.equal(res.statusCode, 404);
+    assert.deepEqual(res.body, { message: "User not found" });
+});
+
+test("getUserByID validates that the id is numeric", () => {
+    const req = { params: { id: "abc" } };
+    const res = createResponseStub();
+
+    userController.getUserByID(req as unknown as Request, res as unknown as Response, () => undefined);
+
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, { message: "User id must be a number" });
 });

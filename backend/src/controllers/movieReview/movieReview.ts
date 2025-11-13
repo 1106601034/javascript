@@ -6,6 +6,16 @@ import type { MovieDocument } from "../../models/movie.js";
 
 type MovieFilter = FilterQuery<MovieDocument>;
 
+const normalizeTypes = (rawTypes: unknown): string[] => {
+    if (!Array.isArray(rawTypes)) {
+        return [];
+    }
+
+    return rawTypes
+        .map((value) => typeof value === "string" ? value.trim() : "")
+        .filter((value) => value.length > 0);
+};
+
 const buildMovieFilter = (rawId?: string): MovieFilter | null => {
     if (!rawId) {
         return null;
@@ -17,7 +27,7 @@ const buildMovieFilter = (rawId?: string): MovieFilter | null => {
 
     const numericId = Number(rawId);
     if (Number.isFinite(numericId)) {
-        return { id: numericId };
+        return { legacyId: numericId };
     }
 
     return null;
@@ -50,16 +60,31 @@ const calculateAverageRating = (reviews: MovieDocument["reviews"]): number => {
 };
 
 export const addMovie: RequestHandler = async (req, res) => {
-    const { title, description, types } = req.body;
-    // data validation
-    if (!title || !description || !Array.isArray(types) || types.length === 0) {
+    const body = (typeof req.body === "object" && req.body !== null) ? req.body as Record<string, unknown> : {};
+    const title = typeof body.title === "string" ? body.title.trim() : "";
+    const description = typeof body.description === "string" ? body.description.trim() : "";
+    const types = normalizeTypes(body.types);
+    const legacyId = Number(body.legacyId ?? body.id);
+
+    if (!title || !description || types.length === 0) {
         return res.status(400).json({
-            message: 'All fields are required and types must be a non-empty array',
+            message: "All fields are required and types must be a non-empty array",
         });
     }
+
+    const moviePayload: Record<string, unknown> = {
+        title,
+        description,
+        types,
+    };
+
+    if (Number.isFinite(legacyId)) {
+        moviePayload.legacyId = legacyId;
+    }
+
     try {
-        await Movie.create(req.body);
-        res.status(201).json({ msg: "Movie added successfully" });
+        const movie = await Movie.create(moviePayload);
+        res.status(201).json(movie);
     } catch {
         res.status(400).json({ error: "Unable to add this movie" });
     }
