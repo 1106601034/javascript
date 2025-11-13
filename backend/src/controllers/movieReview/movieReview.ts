@@ -58,6 +58,55 @@ const calculateAverageRating = (reviews: MovieDocument["reviews"]): number => {
     return Number((total / ratings.length).toFixed(2));
 };
 
+const sanitizeMovieUpdate = (rawBody: unknown): {
+    update?: Record<string, unknown>;
+    error?: string;
+} => {
+    if (!rawBody || typeof rawBody !== "object") {
+        return { error: "Request body must be an object" };
+    }
+
+    const forbiddenFields = ["reviews", "averageRating", "createdAt", "updatedAt"];
+    for (const field of forbiddenFields) {
+        if (field in rawBody) {
+            return { error: `Field "${field}" cannot be modified` };
+        }
+    }
+
+    const body = rawBody as Record<string, unknown>;
+    const update: Record<string, unknown> = {};
+
+    if (typeof body.title === "string" && body.title.trim()) {
+        update.title = body.title.trim();
+    }
+
+    if (typeof body.description === "string") {
+        update.description = body.description.trim();
+    }
+
+    if ("types" in body) {
+        const normalizedTypes = normalizeTypes(body.types);
+        if (normalizedTypes.length === 0) {
+            return { error: "types must be a non-empty array of strings" };
+        }
+        update.types = normalizedTypes;
+    }
+
+    if ("legacyId" in body || "id" in body) {
+        const legacyId = Number(body.legacyId ?? body.id);
+        if (!Number.isFinite(legacyId)) {
+            return { error: "legacyId must be a number" };
+        }
+        update.legacyId = legacyId;
+    }
+
+    if (Object.keys(update).length === 0) {
+        return { error: "No updatable fields provided" };
+    }
+
+    return { update };
+};
+
 export const addMovie: RequestHandler = async (req, res) => {
     const body = (typeof req.body === "object" && req.body !== null) ? req.body as Record<string, unknown> : {};
     const title = typeof body.title === "string" ? body.title.trim() : "";
@@ -125,8 +174,14 @@ export const updateMovieById: RequestHandler = async (req, res) => {
         return res.status(400).json({ error: "Invalid movie id" });
     }
 
+    const { update, error } = sanitizeMovieUpdate(req.body);
+
+    if (error || !update) {
+        return res.status(400).json({ error: error ?? "Invalid payload" });
+    }
+
     try {
-        const movie = await Movie.findOneAndUpdate(filter, req.body, {
+        const movie = await Movie.findOneAndUpdate(filter, update, {
             new: true,
             runValidators: true,
         });

@@ -29,3 +29,7 @@ export const getUserByID: RequestHandler = (req, res) => {
     return res.json(user);
 };
 
+export default {
+    getAllUsers,
+    getUserByID,
+};
