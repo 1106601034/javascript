@@ -7,7 +7,7 @@ import {
     deleteMovieById,
     getReviewsByMovie,
     addReviewsByMovie,
-} from '../controllers/movieReview/movieReview.ts';
+} from '../controllers/movieReview/movieReview.js';
 
 const movieRouter = Router();
 

@@ -1,5 +1,5 @@
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 
 interface AppConfig {
@@ -17,8 +17,12 @@ interface Config {
     database: DatabaseConfig;
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: join(__dirname, "../../.env") });
+const moduleDir = dirname(fileURLToPath(import.meta.url));
+const projectEnvPath = join(process.cwd(), ".env");
+const fallbackEnvPath = join(moduleDir, "../../.env");
+
+dotenv.config({ path: projectEnvPath });
+dotenv.config({ path: fallbackEnvPath });
 
 const parsePort = (value?: string, fallback = 3000): number => {
     const parsed = Number(value);

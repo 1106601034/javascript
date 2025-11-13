@@ -1,14 +1,14 @@
 import express from "express";
 import cors from "cors";
-import { connectToDB } from "./database/db.ts";
-import userRouter from "./routes/users.ts";
-import ValidationRouter from "./routes/dataValidation.ts";
-import movieReview from "./routes/movieReview.ts";
-import { config } from './config/env.ts';
-import logger from "./config/winston.ts";
-import pageNotFound from "./middlewares/pageNotFound.ts";
-import errorHandler from "./middlewares/errorHandler.ts";
-import index from "./routes/index.ts";
+import { connectToDB } from "./database/db.js";
+import userRouter from "./routes/users.js";
+import ValidationRouter from "./routes/dataValidation.js";
+import movieReview from "./routes/movieReview.js";
+import { config } from './config/env.js';
+import logger from "./config/winston.js";
+import pageNotFound from "./middlewares/pageNotFound.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import index from "./routes/index.js";
 const app = express();
 connectToDB();
 

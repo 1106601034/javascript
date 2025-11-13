@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { config } from "../config/env.ts";
-import logger from "../config/winston.ts";
+import { config } from "../config/env.js";
+import logger from "../config/winston.js";
 
 export const connectToDB = async (): Promise<void> => {
     const connectionString = config.database.connectionString;
@@ -11,7 +11,7 @@ export const connectToDB = async (): Promise<void> => {
     }
 
     const conn = mongoose.connection;
-    conn.on("connected", () => logger.info(`DB connected, ${connectionString}`));
+    conn.on("connected", () => logger.info(`DB connected.`));
     conn.on("open", () => logger.info("mongodb connection open"));
     conn.on("disconnected", () => logger.info("mongodb connection lost"));
     conn.on("reconnected", () => logger.info("mongodb connection reconnected"));

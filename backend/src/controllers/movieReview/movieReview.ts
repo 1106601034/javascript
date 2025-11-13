@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 import type { FilterQuery } from "mongoose";
 import { isValidObjectId } from "mongoose";
-import { Movie } from "../../models/movie.ts";
-import type { MovieDocument } from "../../models/movie.ts";
+import { Movie } from "../../models/movie.js";
+import type { MovieDocument } from "../../models/movie.js";
 
 type MovieFilter = FilterQuery<MovieDocument>;
 

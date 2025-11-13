@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import requirements from "./requirementMiddleware.ts";
-import validation from "./validationMiddleware.ts";
+import requirements from "./requirementMiddleware.js";
+import validation from "./validationMiddleware.js";
 
 interface RegistrationPayload {
     name: string;
