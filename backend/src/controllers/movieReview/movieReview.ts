@@ -3,8 +3,10 @@ import type { FilterQuery } from "mongoose";
 import { isValidObjectId } from "mongoose";
 import { Movie } from "../../models/movie.js";
 import type { MovieDocument } from "../../models/movie.js";
+import type { ReviewDocument } from "../../models/review.js";
 
 type MovieFilter = FilterQuery<MovieDocument>;
+type ReviewFilter = FilterQuery<ReviewDocument>;
 
 const normalizeTypes = (rawTypes: unknown): string[] => {
     if (!Array.isArray(rawTypes)) {
