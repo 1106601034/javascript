@@ -8,11 +8,15 @@ import pageNotFound from "../src/middlewares/pageNotFound.js";
 import errorHandler from "../src/middlewares/errorHandler.js";
 import userController from "../src/controllers/users/userController.js";
 import {
-    addReviewsByMovie,
-    getReviewsByMovie,
     updateMovieById,
 } from "../src/controllers/movieReview/movie.ts";
+import {
+    addReviewsByMovie,
+    getReviewsByMovie,
+} from "../src/controllers/movieReview/review.ts";
 import { Movie } from "../src/models/movie.js";
+import { Review } from "../src/models/review.js";
+import { Types } from "mongoose";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
 
@@ -67,6 +71,18 @@ const overrideMovieStatic = <K extends keyof typeof Movie>(
     movieTarget[method] = implementation as typeof original;
     return () => {
         movieTarget[method] = original;
+    };
+};
+
+const overrideReviewStatic = <K extends keyof typeof Review>(
+    method: K,
+    implementation: unknown,
+): (() => void) => {
+    const reviewTarget = Review as typeof Review & Record<string, unknown>;
+    const original = reviewTarget[method];
+    reviewTarget[method] = implementation as typeof original;
+    return () => {
+        reviewTarget[method] = original;
     };
 };
 
@@ -255,28 +271,54 @@ test("getReviewsByMovie returns stored reviews with metadata", { concurrency: fa
     const req: MutableRequest = { params: { id: VALID_MOVIE_ID } };
     const res = createResponseStub();
 
-    const restore = overrideMovieStatic("findOne", ((_filter: Record<string, unknown>, projection: Record<string, number>) => {
-        assert.deepEqual(projection, { reviews: 1, averageRating: 1, title: 1 });
+    const reviewRecord = {
+        _id: new Types.ObjectId(),
+        rating: 5,
+        content: "Great visuals",
+        author: "Jane",
+        createdAt: new Date("2024-01-01T00:00:00.000Z"),
+        updatedAt: new Date("2024-01-01T00:00:00.000Z"),
+    };
+
+    const restoreMovie = overrideMovieStatic("findOne", ((_filter: Record<string, unknown>, projection: Record<string, number>) => {
+        assert.deepEqual(projection, { title: 1, averageRating: 1, reviewCount: 1 });
         return Promise.resolve({
-            _id: VALID_MOVIE_ID,
+            _id: new Types.ObjectId(VALID_MOVIE_ID),
             title: "Inception",
             averageRating: 4.5,
-            reviews: [{ reviewer: "Jane", rating: 5 }],
+            reviewCount: 7,
         }) as unknown as ReturnType<typeof Movie.findOne>;
     }) as unknown as typeof Movie.findOne);
+
+    const restoreReviewFind = overrideReviewStatic("find", ((criteria: Record<string, unknown>) => {
+        assert.ok(criteria.movie);
+        return {
+            sort: () => Promise.resolve([reviewRecord]),
+        };
+    }) as unknown as typeof Review.find);
 
     try {
         await getReviewsByMovie(req as Request, res as unknown as Response, () => undefined);
     } finally {
-        restore();
+        restoreMovie();
+        restoreReviewFind();
     }
 
     assert.equal(res.statusCode, 200);
-    assert.deepEqual(res.body, {
-        title: "Inception",
-        averageRating: 4.5,
-        reviews: [{ reviewer: "Jane", rating: 5 }],
-    });
+
+    const payload = res.body as {
+        title: string;
+        averageRating: number;
+        reviewCount: number;
+        reviews: Array<{ id: string; rating: number; content: string; author: string }>;
+    };
+
+    assert.equal(payload.title, "Inception");
+    assert.equal(payload.averageRating, 4.5);
+    assert.equal(payload.reviewCount, 7);
+    assert.equal(payload.reviews.length, 1);
+    assert.equal(payload.reviews[0]?.content, "Great visuals");
+    assert.equal(payload.reviews[0]?.author, "Jane");
 });
 
 test("addReviewsByMovie saves reviews and recalculates averages", { concurrency: false }, async () => {
@@ -285,36 +327,57 @@ test("addReviewsByMovie saves reviews and recalculates averages", { concurrency:
         body: { rating: 3, comment: "Great visuals" },
     };
     const res = createResponseStub();
-    let saveCalled = false;
-    const movieRecord = {
-        _id: VALID_MOVIE_ID,
+
+    const movieDocument = {
+        _id: new Types.ObjectId(VALID_MOVIE_ID),
         title: "Inception",
-        reviews: [{ rating: 5 }],
-        averageRating: 5,
-        save: async () => {
-            saveCalled = true;
-        },
+    };
+    const reviewDocument = {
+        _id: new Types.ObjectId(),
+        movie: movieDocument._id,
+        rating: 3,
+        content: "Great visuals",
+        author: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
     };
 
-    const restore = overrideMovieStatic("findOne", (() => Promise.resolve(movieRecord)) as unknown as typeof Movie.findOne);
+    const restoreMovieFindOne = overrideMovieStatic("findOne", (() => Promise.resolve(movieDocument)) as unknown as typeof Movie.findOne);
+    const restoreReviewCreate = overrideReviewStatic("create", ((payload: Record<string, unknown>) => {
+        assert.equal(payload.movie, movieDocument._id);
+        assert.equal(payload.rating, 3);
+        assert.equal(payload.content, "Great visuals");
+        return Promise.resolve(reviewDocument);
+    }) as unknown as typeof Review.create);
+
+    const restoreAggregate = overrideReviewStatic("aggregate", ((pipeline: unknown[]) => {
+        assert.ok(Array.isArray(pipeline));
+        return Promise.resolve([{ average: 4, count: 2 }]);
+    }) as unknown as typeof Review.aggregate);
+
+    const restoreMovieUpdate = overrideMovieStatic("findByIdAndUpdate", (() => Promise.resolve()) as unknown as typeof Movie.findByIdAndUpdate);
 
     try {
         await addReviewsByMovie(req as Request, res as unknown as Response, () => undefined);
     } finally {
-        restore();
+        restoreMovieFindOne();
+        restoreReviewCreate();
+        restoreAggregate();
+        restoreMovieUpdate();
     }
 
-    assert.equal(saveCalled, true);
     assert.equal(res.statusCode, 201);
 
     const responseBody = res.body as {
         msg: string;
         averageRating: number;
-        reviews: Array<{ rating: number; comment?: string }>;
+        reviewCount: number;
+        review: { id: string; rating: number; content: string };
     };
 
     assert.equal(responseBody.msg, "Review added successfully");
     assert.equal(responseBody.averageRating, 4);
-    assert.equal(movieRecord.reviews.length, 2);
-    assert.equal(movieRecord.reviews.at(-1)?.rating, 3);
+    assert.equal(responseBody.reviewCount, 2);
+    assert.equal(responseBody.review.content, "Great visuals");
+    assert.equal(responseBody.review.rating, 3);
 });

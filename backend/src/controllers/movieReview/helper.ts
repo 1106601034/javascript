@@ -31,34 +31,6 @@ export const buildMovieFilter = (rawId?: string): MovieFilter | null => {
     return null;
 };
 
-// returns the average rating score (rounded to 2 decimals),
-// It’s used after we mutate the reviews array so the model always has an up‑to‑date 
-export const calculateAverageRating = (reviews: MovieDocument["reviews"]): number => {
-    const reviewList = Array.isArray(reviews) ? reviews : [];
-
-    const ratings = reviewList
-        .map((review) => {
-            if (typeof review === "number") {
-                return review;
-            }
-
-            if (review && typeof review === "object" && "rating" in review) {
-                const value = Number((review as { rating?: unknown }).rating);
-                return Number.isFinite(value) ? value : NaN;
-            }
-
-            return NaN;
-        })
-        .filter((value): value is number => Number.isFinite(value));
-
-    if (ratings.length === 0) {
-        return 0;
-    }
-
-    const total = ratings.reduce((sum, value) => sum + value, 0);
-    return Number((total / ratings.length).toFixed(2));
-};
-
 // check user input before update by id.
 export const sanitizeMovieUpdate = (rawBody: unknown): {
     update?: Record<string, unknown>;

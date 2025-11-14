@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import { Movie } from "../../models/movie.js";
+import { Review } from "../../models/review.js";
 import {
     normalizeTypes,
     buildMovieFilter,
@@ -108,6 +109,8 @@ export const deleteMovieById: RequestHandler = async (req, res) => {
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
+
+        await Review.deleteMany({ movie: movie._id });
 
         return res.json({ msg: "Movie deleted successfully" });
     } catch {

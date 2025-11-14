@@ -33,9 +33,9 @@ const movieSchema = new Schema({
         type: Number,
         default: 0,
     },
-    reviews: {
-        type: [Schema.Types.Mixed],
-        default: [],
+    reviewCount: {
+        type: Number,
+        default: 0,
     },
 }, { timestamps: true });
 
