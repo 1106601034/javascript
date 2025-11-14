@@ -4,6 +4,7 @@ import { Movie } from "../../models/movie.js";
 import {
     buildMovieFilter,
     calculateAverageRating,
+    sanitizeMovieUpdate,
 } from "./helper.js";
 
 export const getReviewsByMovie: RequestHandler = async (req, res) => {
@@ -73,5 +74,58 @@ export const addReviewsByMovie: RequestHandler = async (req, res) => {
         });
     } catch {
         return res.status(500).json({ error: "Unable to add review" });
+    }
+}
+
+export const getReviewsByMovieAndReviewId: RequestHandler = async () => {
+
+}
+
+export const updateReviewsByMovieAndReviewId: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    const { update, error } = sanitizeMovieUpdate(req.body);
+
+    if (error || !update) {
+        return res.status(400).json({ error: error ?? "Invalid payload" });
+    }
+
+    try {
+        const movie = await Movie.findOneAndUpdate(filter, update, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        return res.json(movie);
+    } catch {
+        return res.status(500).json({ error: "Unable to update this comment" });
+    }
+};
+
+export const deleteReviewsByMovieAndReviewId: RequestHandler = async (req, res) => {
+    const filter = buildMovieFilter(req.params.id);
+
+    if (!filter) {
+        return res.status(400).json({ error: "Invalid movie id" });
+    }
+
+    try {
+        const movie = await Movie.findOneAndDelete({
+        });
+
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+        return res.json({ msg: "Comment deleted successfully" });
+    } catch {
+        return res.status(500).json({ error: "Unable to delete this comment" });
     }
 };
