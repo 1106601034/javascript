@@ -3,6 +3,7 @@ import { Schema, model, type InferSchemaType } from "mongoose";
 const movieSchema = new Schema({
     legacyId: {
         type: Number,
+        unique: true,
         required: false,
     },
     title: {

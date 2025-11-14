@@ -3,7 +3,7 @@ import cors from "cors";
 import { connectToDB } from "./database/db.js";
 import userRouter from "./routes/users.js";
 import ValidationRouter from "./routes/dataValidation.js";
-import movieReview from "./routes/movieReview.js";
+import movieRouter from "./routes/movieReview.ts";
 import { config } from './config/env.js';
 import logger from "./config/winston.js";
 import pageNotFound from "./middlewares/pageNotFound.js";
@@ -18,7 +18,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use("/", index);
 app.use("/users", userRouter);
 app.use("/validation", ValidationRouter);
-app.use("/movieReview", movieReview);
+app.use("/movie", movieRouter);
 app.use(pageNotFound);
 app.use(errorHandler);
 

@@ -1,9 +1,10 @@
 import { Schema, model, InferSchemaType } from "mongoose";
 
 const reviewSchema = new Schema({
-    id: {
+    legacyId: {
         type: Number,
-        required: true,
+        unique: true,
+        required: false,
     },
     content: {
         type: String,
@@ -15,7 +16,7 @@ const reviewSchema = new Schema({
         min: 0,
         max: 5,
     },
-});
+}, { timestamps: true });
 
 export type ReviewDocument = InferSchemaType<typeof reviewSchema>;
 

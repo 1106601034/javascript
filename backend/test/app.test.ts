@@ -11,7 +11,7 @@ import {
     addReviewsByMovie,
     getReviewsByMovie,
     updateMovieById,
-} from "../src/controllers/movieReview/movieReview.js";
+} from "../src/controllers/movieReview/movie.ts";
 import { Movie } from "../src/models/movie.js";
 
 const { requirements, validation, dataValidation } = dataValidationModule;
