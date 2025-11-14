@@ -4,6 +4,7 @@ const reviewSchema = new Schema({
     legacyId: {
         type: Number,
         unique: true,
+        sparse: true,
         required: false,
     },
     content: {

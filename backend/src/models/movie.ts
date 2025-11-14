@@ -4,6 +4,7 @@ const movieSchema = new Schema({
     legacyId: {
         type: Number,
         unique: true,
+        sparse: true,
         required: false,
     },
     title: {

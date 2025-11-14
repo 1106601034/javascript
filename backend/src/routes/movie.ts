@@ -7,12 +7,12 @@ import {
     deleteMovieById,
 } from '../controllers/movieReview/movie.ts';
 
-const movieRouter = Router();
+const router = Router();
 
-movieRouter.post('/', addMovie);
-movieRouter.get('/', getAllMovies);
-movieRouter.get('/:id', getMovieById);
-movieRouter.put('/:id', updateMovieById);
-movieRouter.delete('/:id', deleteMovieById);
+router.post('/', addMovie);
+router.get('/', getAllMovies);
+router.get('/:id', getMovieById);
+router.put('/:id', updateMovieById);
+router.delete('/:id', deleteMovieById);
 
-export default movieRouter;
+export default router;
