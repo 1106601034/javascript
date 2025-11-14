@@ -5,7 +5,7 @@ import {
     getMovieById,
     updateMovieById,
     deleteMovieById,
-} from '../controllers/movieReview/movie.ts';
+} from '../controllers/movieReview/movie.js';
 
 const router = Router();
 

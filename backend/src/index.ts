@@ -3,7 +3,7 @@ import cors from "cors";
 import { connectToDB } from "./database/db.js";
 import userRouter from "./routes/users.js";
 import ValidationRouter from "./routes/dataValidation.js";
-import movieRouter from "./routes/movieReview.ts";
+import movieRouter from "./routes/movieReview.js";
 import { config } from './config/env.js';
 import logger from "./config/winston.js";
 import pageNotFound from "./middlewares/pageNotFound.js";

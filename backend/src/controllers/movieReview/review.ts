@@ -1,10 +1,10 @@
 import type { RequestHandler } from "express";
-import { Movie } from "../../models/movie.ts";
-// import { Review } from "../../models/review.ts";
+import { Movie } from "../../models/movie.js";
+// import { Review } from "../../models/review.js";
 import {
     buildMovieFilter,
     calculateAverageRating,
-} from "./helper.ts";
+} from "./helper.js";
 
 export const getReviewsByMovie: RequestHandler = async (req, res) => {
     const filter = buildMovieFilter(req.params.id);

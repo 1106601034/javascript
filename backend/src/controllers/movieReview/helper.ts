@@ -1,6 +1,6 @@
 import { isValidObjectId } from "mongoose";
 import type { FilterQuery } from "mongoose";
-import { forbiddenFields } from "./config.ts";
+import { forbiddenFields } from "./config.js";
 import type { MovieDocument } from "../../models/movie.js";
 
 // alias MovieFilter so anything we build to query Mongo has proper typing.

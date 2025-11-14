@@ -1,10 +1,10 @@
 import type { RequestHandler } from "express";
-import { Movie } from "../../models/movie.ts";
+import { Movie } from "../../models/movie.js";
 import {
     normalizeTypes,
     buildMovieFilter,
     sanitizeMovieUpdate,
-} from "./helper.ts";
+} from "./helper.js";
 
 export const addMovie: RequestHandler = async (req, res) => {
     const body = (typeof req.body === "object" && req.body !== null) ? req.body as Record<string, unknown> : {};
