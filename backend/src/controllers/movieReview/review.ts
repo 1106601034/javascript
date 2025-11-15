@@ -1,112 +1,15 @@
 import type { RequestHandler } from "express";
-import { isValidObjectId, Types } from "mongoose";
 import { Movie } from "../../models/movie.js";
 import { Review } from "../../models/review.js";
-import { buildMovieFilter } from "./helper.js";
-
-type ReviewPayload = {
-    rating?: unknown;
-    comment?: unknown;
-    content?: unknown;
-    author?: unknown;
-    legacyId?: unknown;
-};
-
-const extractReviewContent = (body: ReviewPayload): string => {
-    const value = typeof body.comment === "string"
-        ? body.comment
-        : typeof body.content === "string"
-            ? body.content
-            : "";
-
-    return value.trim();
-};
-
-const sanitizeReviewUpdate = (rawBody: unknown): {
-    update?: {
-        rating?: number;
-        content?: string;
-        author?: string;
-    };
-    error?: string;
-} => {
-    if (!rawBody || typeof rawBody !== "object") {
-        return { error: "Request body must be an object" };
-    }
-
-    const body = rawBody as ReviewPayload;
-    const update: Record<string, unknown> = {};
-
-    if ("rating" in body) {
-        const ratingValue = Number(body.rating);
-        if (!Number.isFinite(ratingValue) || ratingValue < 0 || ratingValue > 5) {
-            return { error: "Rating must be a number between 0 and 5" };
-        }
-        update.rating = ratingValue;
-    }
-
-    if ("comment" in body || "content" in body) {
-        const content = extractReviewContent(body);
-        if (!content) {
-            return { error: "Review content must be a non-empty string" };
-        }
-        update.content = content;
-    }
-
-    if ("author" in body && typeof body.author === "string") {
-        update.author = body.author.trim();
-    }
-
-    if (Object.keys(update).length === 0) {
-        return { error: "No updatable fields provided" };
-    }
-
-    return { update: update as { rating?: number; content?: string; author?: string } };
-};
-
-const isValidReviewId = (rawId?: string): rawId is string => Boolean(rawId && isValidObjectId(rawId));
-
-const recalculateMovieReviewStats = async (movieId: Types.ObjectId): Promise<{
-    averageRating: number;
-    reviewCount: number;
-}> => {
-    const stats = await Review.aggregate<{ average: number; count: number }>([
-        { $match: { movie: movieId } },
-        {
-            $group: {
-                _id: "$movie",
-                average: { $avg: "$rating" },
-                count: { $sum: 1 },
-            },
-        },
-    ]);
-
-    const average = stats[0]?.average ?? 0;
-    const averageRating = Number(average.toFixed(2));
-    const reviewCount = stats[0]?.count ?? 0;
-
-    await Movie.findByIdAndUpdate(movieId, { averageRating, reviewCount });
-
-    return { averageRating, reviewCount };
-};
-
-const serializeReview = (review: {
-    _id: Types.ObjectId;
-    rating: number;
-    content: string;
-    author?: string;
-    legacyId?: number | null;
-    createdAt?: Date;
-    updatedAt?: Date;
-}) => ({
-    id: review._id.toString(),
-    rating: review.rating,
-    content: review.content,
-    author: review.author ?? "",
-    legacyId: typeof review.legacyId === "number" ? review.legacyId : undefined,
-    createdAt: review.createdAt,
-    updatedAt: review.updatedAt,
-});
+import {
+    buildMovieFilter,
+    serializeReview,
+    extractReviewContent,
+    recalculateMovieReviewStats,
+    isValidReviewId,
+    sanitizeReviewUpdate,
+} from "./helper.js";
+import type { ReviewPayload } from "./type.ts";
 
 export const getReviewsByMovie: RequestHandler = async (req, res) => {
     const filter = buildMovieFilter(req.params.id);
