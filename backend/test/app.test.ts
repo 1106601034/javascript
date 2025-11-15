@@ -14,6 +14,11 @@ import {
     addReviewsByMovie,
     getReviewsByMovie,
 } from "../src/controllers/movieReview/review.ts";
+import {
+    sanitizeReviewUpdate,
+    extractReviewContent,
+    recalculateMovieReviewStats,
+} from "../src/controllers/movieReview/helper.ts";
 import { Movie } from "../src/models/movie.js";
 import { Review } from "../src/models/review.js";
 import { Types } from "mongoose";
@@ -380,4 +385,82 @@ test("addReviewsByMovie saves reviews and recalculates averages", { concurrency:
     assert.equal(responseBody.reviewCount, 2);
     assert.equal(responseBody.review.content, "Great visuals");
     assert.equal(responseBody.review.rating, 3);
+});
+
+test("sanitizeReviewUpdate normalizes valid fields", () => {
+    const payload = {
+        rating: "4.5",
+        comment: "  Amazing storytelling ",
+        author: "  Chris ",
+    };
+
+    const { update, error } = sanitizeReviewUpdate(payload);
+
+    assert.equal(error, undefined);
+    assert.deepEqual(update, {
+        rating: 4.5,
+        content: "Amazing storytelling",
+        author: "Chris",
+    });
+});
+
+test("sanitizeReviewUpdate rejects invalid payloads", () => {
+    const invalidRating = sanitizeReviewUpdate({ rating: 8 });
+    assert.equal(invalidRating.update, undefined);
+    assert.equal(invalidRating.error, "Rating must be a number between 0 and 5");
+
+    const emptyBody = sanitizeReviewUpdate({});
+    assert.equal(emptyBody.update, undefined);
+    assert.equal(emptyBody.error, "No updatable fields provided");
+
+    const emptyContent = sanitizeReviewUpdate({ comment: "   " });
+    assert.equal(emptyContent.update, undefined);
+    assert.equal(emptyContent.error, "Review content must be a non-empty string");
+});
+
+test("extractReviewContent favors comment then content and trims whitespace", () => {
+    const fromComment = extractReviewContent({ comment: "  preferred  " });
+    assert.equal(fromComment, "preferred");
+
+    const fromContent = extractReviewContent({ content: "  fallback " });
+    assert.equal(fromContent, "fallback");
+
+    const empty = extractReviewContent({});
+    assert.equal(empty, "");
+});
+
+test("recalculateMovieReviewStats aggregates reviews and updates the movie", { concurrency: false }, async () => {
+    const movieId = new Types.ObjectId();
+    let persistedUpdate: Record<string, number> | undefined;
+
+    const restoreAggregate = overrideReviewStatic("aggregate", ((pipeline: unknown[]) => {
+        assert.deepEqual(pipeline, [
+            { $match: { movie: movieId } },
+            {
+                $group: {
+                    _id: "$movie",
+                    average: { $avg: "$rating" },
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+        return Promise.resolve([{ average: 3.666, count: 6 }]);
+    }) as unknown as typeof Review.aggregate);
+
+    const restoreMovieUpdate = overrideMovieStatic("findByIdAndUpdate", ((id: Types.ObjectId, update: Record<string, number>) => {
+        assert.equal(id, movieId);
+        persistedUpdate = update;
+        return Promise.resolve(null);
+    }) as unknown as typeof Movie.findByIdAndUpdate);
+
+    try {
+        const stats = await recalculateMovieReviewStats(movieId);
+        assert.equal(stats.averageRating, 3.67);
+        assert.equal(stats.reviewCount, 6);
+    } finally {
+        restoreAggregate();
+        restoreMovieUpdate();
+    }
+
+    assert.deepEqual(persistedUpdate, { averageRating: 3.67, reviewCount: 6 });
 });
